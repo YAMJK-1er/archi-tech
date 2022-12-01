@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/CSS/depenses.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/CSS/fontawesome/css/all.min.css') }}">
+    <title>{{ projet.nom }} - Depenses</title>
+</head>
+<body>
+    <div id="header">
+        <div id="click-menu">
+            <i class="fa fa-bars close"></i>
+        </div>
+
+        <div id="logo">
+            Archi - Tech
+        </div>
+
+        <div id="infos-profil-icons">
+            <i class="fa fa-user-circle fa-2x" id="icons"></i>
+            <div id="block-info-responsive">
+                <div class="info"><i class="fa fa-user"></i> {{ user.prenom }} {{ user.nom }} </div>
+                <div class="info"><i class="fa fa-user-tie"></i> {{ user.poste }}</div>
+                <div class="info"><a href="/logout"><button><i class="fa fa-sign-out-alt"></i> Deconnexion</button></a></div>
+            </div>
+        </div>
+    </div> 
+    
+    <div id="section">
+        <div id="side-menu">
+            <div id="nom-projet">
+                {{ projet.nom }}
+            </div>
+
+            <hr class="hr-side-menu">
+            
+            <div id="options-details">
+                <a href="/projets/{{projet.id}}/details"><div class="option"><i class="fa fa-info-circle"></i> Informations <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <a href="/projets/{{projet.id}}/details/planning/{{ planning.id }}"><div class="option active" id="planning"><i class="fa fa-calendar-alt"></i> Planning des tâches <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <div id="planning-sub-menu">
+                    <a href="/projets/{{projet.id}}/details/planning/{{ planning.id }}/taches_a_realiser"><div class="option"><i class="fa fa-calendar-alt"></i> Tâches à réaliser <i class="fa fa-angle-right fleche"></i></div></a>
+
+                    <hr class="hr-side-menu">
+
+                    <a href="/projets/{{projet.id}}/details/planning/{{ planning.id }}/taches_realisees"><div class="option"><i class="fa fa-calendar-alt"></i> Tâches déjà réalisées <i class="fa fa-angle-right fleche"></i></div></a>
+
+                    <hr class="hr-side-menu">
+                </div>
+
+                <a href="/projets/{{projet.id}}/details/approvisionnement/{{ approv.id }}"><div class="option"><i class="fa fa-briefcase"></i> Approvisionnement <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <a href="/projets/{{projet.id}}/details/depenses"><div class="option" id="active"><i class="fas fa-money-bill-wave-alt"></i> Dépenses <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <a href="/projets/{{projet.id}}/details/execution_financiere/{{ execfin.id }}"><div class="option"><i class="fa fa-edit"></i> Exécution financière <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <a href="/projets/{{projet.id}}/details/execution_physique/{{ execphys.id }}"><div class="option"><i class="fa fa-edit"></i> Exécution physique <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <a href="/projets/{{projet.id}}/details/observations"><div class="option"><i class="fa fa-eye"></i> Observations <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <a href="/projets/{{projet.id}}/details/images"><div class="option"><i class="fa fa-file-image"></i> Images <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <a href="/projets/{{projet.id}}/details/plans"><div class="option"><i class="fas fa-file-alt"></i> Bibliothèque <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <a href="/projets"><div class="option"><i class="fa fa-building"></i> Liste de vos projets <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+            </div>
+        </div>
+
+        <div id="content">
+            <div id="titre">
+                Dépenses du projet
+            </div>
+
+            <hr id="hr-content-titre">
+
+            <div id="bande"></div> 
+
+            <div id="depenses">
+                {% if projet.estTermine == false %}
+                    {% if  user.poste == 'Architecte' %}
+                        <div id="option-depenses-ajouter">
+                            <a href="/projets/{{ projet.id }}/details/depenses/ajouter"><button><i class="fa fa-plus"></i> Ajouter une dépense</button></a>
+                        </div>
+                    {% endif %}
+                      
+                {% endif %}
+                
+                {% if depenses|length == 0 %}
+                        <p id='zero'>Vous n'avez pas encore ajouté de dépenses</p>
+                    {% else %}
+                        <div id="entete">
+                            <div class="colonne-date">Date</div>
+                            <div class="colonne-intitule" align='center'>Intitule</div>
+                            <div class="colonne-unite">Coût(Fcfa)</div>
+                            <div class="colonne-quantite">Quantité</div>
+                            <div class="colonne-total">Total(Fcfa)</div>
+                        </div>
+
+                        {% for depense in depenses %}
+                            <div class="lignes">
+                                <div class="colonne-date">{{ depense.date|date('d/m/Y') }}</div>
+                                <div class="colonne-intitule">{{ depense.intitule }}</div>
+                                <div class="colonne-unite">{{ depense.unite }}</div>
+                                <div class="colonne-quantite">{% if depense.quantite %}{{ depense.quantite }} {% else %}--- {% endif %}</div>
+                                <div class="colonne-total">{{ depense.total }}</div>
+                            </div>
+
+                            <hr class="hr-depenses">
+                        {% endfor %}
+                {% endif %}
+
+            </div>
+
+            <div id="footer"><p><i class="fa fa-copyright"></i> Tout droits réservés , Oracle Logic Consulting SARL 2022</p></div>
+        </div>
+    </div>
+
+    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('js/details_projet.js') }}"></script>
+    <script>
+        $("#click-menu").click(function(){
+            let visible = $("#side-menu").hasClass('visible');
+
+            if(visible){
+                $("#click-menu i").removeClass('fa-plus');
+                $("#click-menu i").addClass('fa-bars');
+                $("#side-menu").css('left', '-100%');
+                $("#side-menu").removeClass('visible');
+            }
+            else{
+                $("#click-menu i").removeClass('fa-bars');
+                $("#click-menu i").addClass('fa-plus');
+                $("#side-menu").css('left', '0');
+                $("#side-menu").addClass('visible');
+            }
+        });
+
+        $("#icons").click(function(){
+            let visible = $("#block-info-responsive").hasClass('visible');
+
+            if (visible)
+            {
+                $("#block-info-responsive").css('height', '0vh');
+                $("#block-info-responsive").removeClass('visible');
+            }
+            else{
+                $("#block-info-responsive").css('height', '25vh');
+                $("#block-info-responsive").addClass('visible');
+            }
+        });
+    </script>
+</body>
+</html>

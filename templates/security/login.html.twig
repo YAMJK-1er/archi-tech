@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/CSS/fontawesome/css/all.min.css') }}">
+    <title>Connexion</title>
+</head>
+<body>
+    <div id="bloc-page">
+        <div id="header">
+            Archi - Tech
+        </div>
+
+        <div id="section">
+            <div id="titre">
+                Connectez vous
+            </div>
+
+            <hr id="hr-titre">
+
+            <form method="post">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                {% if app.user %}
+                    <div class="mb-3">
+                        You are logged in as {{ app.user.email }}, <a href="{{ path('app_logout') }}">Logout</a>
+                    </div>
+                {% endif %}
+
+                <div class="champ">
+                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus placeholder='Email'>
+                </div>
+                
+                <div class="champ">
+                    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required placeholder='Mot de passe'>
+                </div>
+
+                <input type="hidden" name="_csrf_token"
+                    value="{{ csrf_token('authenticate') }}"
+                >
+
+                {#
+                    Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
+                    See https://symfony.com/doc/current/security/remember_me.html
+
+                    <div class="checkbox mb-3">
+                        <label>
+                            <input type="checkbox" name="_remember_me"> Remember me
+                        </label>
+                    </div>
+                #}
+
+                <button class="btn btn-lg btn-primary" type="submit">
+                    Me connecter
+                </button>
+            </form>
+
+            <div id="footer"><p><i class="fa fa-copyright"></i> Tout droits réservés , Oracle Logic Consulting SARL 2022</p></div>
+        </div>
+    </div>
+</body>
+</html>

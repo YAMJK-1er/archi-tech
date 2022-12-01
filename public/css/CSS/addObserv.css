@@ -1,0 +1,420 @@
+/*Style globale*/
+
+*
+{
+    margin: 0;
+    padding: 0;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+button
+{
+    cursor: pointer;
+}
+
+#content
+{
+    position : relative ;
+}
+
+/*Fin Style globale*/
+
+/*Style du header*/
+
+#header
+{
+    width : 90% ;
+    padding-left: 5%;
+    padding-right: 5%;
+    height : 7.5vh ;
+    display: flex ;
+    justify-content: space-between;
+    align-items: center;
+    background: #ed8715;
+    color : white;
+}
+
+#infos-profil
+{
+    width: 40%;
+    display: flex;
+    justify-content: space-between;
+}
+
+#logo
+{
+    text-transform: uppercase;
+    font-weight: bolder ;
+    font-size: 1.25em;
+    letter-spacing: 5px;
+}
+
+.info button
+{
+    padding: 3px 15px;
+    border-radius: 5px;
+    background: #185359;
+    color: white;
+}
+
+#click-menu{
+    display: none;
+}
+
+#infos-profil-icons
+{
+    position: relative;
+}
+
+#block-info-responsive{
+    position: absolute;
+    z-index: 2;
+    top : 35px;
+    left: -195px;
+    width : 250px;
+    height: 0vh;
+    background-color: #ed8715;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    overflow: hidden;
+    transition : 0.5s;
+    border-radius: 0 0 15px 15px;
+}
+
+/*Fin Style du header*/
+
+/*Style de section*/
+
+#section
+{
+    width : 100%;
+    height: 92.5vh;
+    display: flex;
+    justify-content: space-between;
+}
+
+#side-menu
+{
+    width : 20%;
+    background: #000d16;
+    color: white;
+    font-size: 1.1em;
+}
+
+#side-menu a
+{
+    color : white ;
+    text-decoration: none;
+}
+
+#nom-projet
+{
+    padding : 2vh 0;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 1.25em;
+}
+
+#options-details .option
+{
+    padding : 1.5vh 0 1.5vh 15px;
+    position: relative;
+    cursor: pointer;
+}
+
+.option .fleche
+{
+    position: absolute;
+    right : 15px;
+}
+
+#planning-sub-menu
+{
+    display: none;
+}
+
+.hr-side-menu
+{
+    border: none;
+    border-top: 2px solid #444;
+}
+
+#content
+{
+    width : 75% ;
+    padding: 5vh 2.5%;
+    background: #185359;
+}
+
+#content #titre
+{
+    font-size: 2em;
+    color: white;
+}
+
+#hr-content-titre
+{
+    border: none;
+    border-top: 2px solid #666;
+    margin: 2.5vh auto;
+}
+
+.hr-observ
+{
+    border: none;
+    border-top: 1px solid #666;
+}
+
+#bande
+{
+    width : 100%;
+    height: 3vh;
+    background: #ed8715;
+}
+
+#observations
+{
+    width : 95%;
+    height : 65vh;
+    padding : 2.5vh 2.5%;
+    background: white;
+    overflow-y: auto;
+}
+
+form
+{
+    width : 30% ;
+    height : 55vh ;
+    margin : auto ;
+    display : flex ;
+    flex-direction : column ;
+    justify-content : space-around;
+    align-items: center;
+    margin-top : 5vh ;
+}
+
+#label
+{
+    text-align : center ;
+    margin-bottom : 25px ;
+    font-weight : bolder ;
+    font-size : 1.2em ;
+    color : #666;
+}
+
+#observation_form_date
+{
+    display : flex ;
+    justify-content : space-around ;
+}
+
+#observation_form_date select
+{
+    width : 75px ;
+    font-size : 1em;
+    margin-left: 15px;
+}
+
+textarea
+{
+    resize : none ;
+    width : 100% ;
+    height : 20vh ;
+    padding : 10px ;
+    border-radius : 10px ;
+    font-size : 1.25em ;
+}
+
+form button
+{
+    width : 40% ;
+    align-self : center ;
+    padding-top : 3px ;
+    padding-bottom : 3px ;
+    font-size : 1em ;
+    background : #185359 ;
+    color : white ;
+    border-radius : 5px ;
+}
+
+#options
+{
+    width : 100% ;
+    display : flex ;
+    justify-content : space-between ;
+}
+
+form a
+{
+    color : white ;
+    text-decoration : none ;
+}
+
+#del
+{
+    background: red;
+}
+
+.active
+{
+    background: #185359;
+}
+
+/*Fin Style de section*/
+
+/*Style de footer*/
+
+#footer
+{
+    padding : 0 5% ;
+    position : absolute ;
+    margin: auto;
+    bottom: 0;
+    width : 80%;
+    color : white ;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*Fin style de Footer*/
+
+@media screen and (max-width: 1200px) {
+    #click-menu, #infos-profil-icons{
+        display: block;
+    }
+
+    #section
+    {
+        position: relative;
+    }
+
+    #side-menu{
+        position: absolute;
+        left: -100%;
+        opacity: 0.9;
+        transition: 0.5s;
+        width: 25%;
+        height: 92.5vh;
+        z-index: 5;
+    }
+
+    #content{
+        width: 100%;
+    }
+
+    #infos-profil{
+        display: none;
+    }
+
+    .close
+    {
+        transform: rotateZ(135deg);
+    }
+
+    .fa-bars{
+        transform: none;
+    }
+
+    .fa-bars, .close{
+        font-size: 2.5em;
+    }
+
+    #click-menu i
+    {
+        transition: 0.5s;
+    }
+}
+
+@media screen and (max-width: 1000px){
+    #side-menu{
+        width: 30%;
+    }
+
+    form{
+        width: 45%;
+    }
+
+    #footer{
+        width: 80%;
+    }
+
+    .colonne-option button{
+        font-size: 0.75em;
+    }
+}
+
+@media screen and (max-width: 800px){
+    #side-menu{
+        width: 35%;
+    }
+
+    form{
+        width: 55%;
+    }
+}
+
+@media screen and (max-width: 700px){
+    #side-menu{
+        width: 40%;
+    }
+
+    form{
+        width: 65%;
+    }
+}
+
+@media screen and (max-width: 600px){
+    #side-menu{
+        width: 50%;
+    }
+
+    form{
+        width: 75%;
+    }
+
+    #content #titre{
+        font-size:1.5em;
+    }
+}
+
+@media screen and (max-width: 500px){
+    .fa-bars, .close{
+        font-size: 1.9em;
+    }
+
+    #side-menu{
+        width: 75%;
+    }
+
+    #section #titre{
+        font-size: 1.5em;
+    }
+
+    #footer{
+        font-size: 0.65em;
+        padding : 1vh 2vw ;
+    }
+
+    #block-info-responsive
+    {
+        width: 230px;
+    }
+
+    #observation_form_date select
+    {
+        width : 60px ;
+        font-size : 0.9em;
+        margin-left: 15px;
+    }
+
+    textarea{
+        font-size: 1em;
+    }
+
+    form{
+        width: 90%;
+    }
+}

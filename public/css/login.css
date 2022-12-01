@@ -1,0 +1,165 @@
+/*Style global*/
+
+*
+{
+    margin : 0;
+    padding: 0;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+button
+{
+    cursor: pointer;
+}
+
+body
+{
+    position : relative ;
+}
+
+/*Fin style global*/
+
+/*Style de header*/
+
+#header
+{
+    height : 10vh ;
+    background: #ed8715;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 2em;
+    text-transform: uppercase;
+    letter-spacing: 15px;
+    font-weight: bold;
+    color : white ;
+}
+
+/*Fin Style de header*/
+
+/*Style de section*/
+
+#section
+{
+    width : 80%;
+    height : 80vh ;
+    padding: 5vh 10%;
+    background-color: #185359;
+}
+
+#titre
+{
+    font-size: 2em;
+    color: white;
+}
+
+#hr-titre
+{
+    border: none;
+    border-top: 2px solid #666;
+    margin: 2.5vh auto;
+}
+
+form
+{
+    width : 40%;
+    height : 50vh ;
+    margin: auto;
+    margin-top: 10vh;
+    background: white ;
+    border-radius: 15px ;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center ;
+}
+
+.champ
+{
+    width : 100% ;
+    padding: 2vh 0;
+}
+
+input
+{
+    width : 80%;
+    display: block;
+    margin: auto;
+    padding: 5px 10px ;
+    font-size: 1.2em;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid #666;
+}
+
+form button
+{
+    padding: 5px 25px ;
+    font-size : 1.1em;
+    border-radius: 5px;
+    background: #185359;
+    color: white;
+}
+
+/*Fin style de section*/
+
+/*Style de footer*/
+
+#footer
+{
+    padding : 1vh 2vw ;
+    position : absolute ;
+    margin: auto;
+    bottom: 0;
+    width : 80%;
+    color : white ;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*Fin style de Footer*/
+
+@media screen and (max-width: 950px) {
+    #titre{
+        font-size: 1.75em;
+    }
+
+    form{
+        width : 90%;
+    }
+
+    #footer {
+        width: 80%;
+    }
+}
+
+@media screen and (min-width: 950px) and (max-width: 1250px) {
+    form{
+        width: 75%;
+    }
+}
+
+@media screen and (max-width: 500px){
+    #header{
+        font-size: 1.35em;
+        letter-spacing: 10px;
+    }
+
+    #titre{
+        font-size: 1.25em;
+    }
+
+    #footer{
+        font-size: 0.65em;
+    }
+
+    form{
+        width : 100%;
+    }
+
+    input, form button{
+        font-size: 1em;
+    }
+}

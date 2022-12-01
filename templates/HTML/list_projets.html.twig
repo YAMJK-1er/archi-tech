@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/CSS/list_projets.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/CSS/fontawesome/css/all.min.css') }}">
+    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+    <title>Liste de vos projets</title>
+</head>
+<body>
+    <div id="bloc-page">
+        <div id="header">
+            <div id="logo">
+                Archi - Tech
+            </div>
+
+            <div id="infos-profil-icons">
+                <i class="fa fa-user-circle fa-2x" id="icons"></i>
+                <div id="block-info-responsive">
+                    <div class="info"><i class="fa fa-user"></i> {{ user.prenom }} {{ user.nom }} </div>
+                    <div class="info"><i class="fa fa-user-tie"></i> {{ user.poste }}</div>
+                    <div class="info"><a href="/logout"><button><i class="fa fa-sign-out-alt"></i> Deconnexion</button></a></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="section">
+            <div id="titre">
+                Gestion de chantiers
+            </div>
+
+            <hr id="hr-section-titre">
+
+            <div id="bande"></div>
+            <div id="list-projets">
+                <div id="options-add-import">
+                    {% if user.poste == 'Architecte' %}
+                        <a href="/projet/create"><button><i class="fa fa-plus"></i> Ajouter un projet</button></a>
+                    {% endif %}
+                    <a href="/projet/import"><button><i class="fa fa-download"></i> Importer un projet</button></a>
+
+                    {% if admin %}
+                        <a href="/adminregister"><button><i class="fa fa-plus"></i> Ajouter un compte</button></a>
+                    {% endif %}
+                </div>
+
+                <div id="list">
+                    {% if projets|length == 0 and imports|length == 0 %}
+                        Vous n'avez pas encore de projets. Débutez en un ou importez un déjà existant
+                    {% else %}
+                        <div id="entete">
+                            <div class="colonne-nom">Nom du projet</div>
+                            <div class="colonne-code">Code</div>
+                            <div class="colonne-statut">Statut</div>
+                            <div class="colonne-option">Option</div>
+                        </div>
+
+                        {% for projet in projets %}
+                            <div class="lignes">
+                                <div class="colonne-nom">{{ projet.nom }}</div>
+                                <div class="colonne-code">{{projet.code}}</div>
+                                <div class="colonne-statut">{% if projet.estTermine %}Terminé {% else %}En cours{% endif %}</div>
+                                <div class="colonne-option"><a href="/projets/{{ projet.id }}/details"><button>Détails</button></a></div>
+                            </div>
+
+                            <hr>
+                        {% endfor %}  
+
+                        {% for projet in imports %}
+                            <div class="lignes">
+                                <div class="colonne-nom">{{ projet.nom }}</div>
+                                <div class="colonne-code">{{projet.code}}</div>
+                                <div class="colonne-statut">{% if projet.estTermine %}Terminé {% else %}En cours{% endif %}</div>
+                                <div class="colonne-option"><a href="/projets/{{ projet.id }}/details"><button>Détails</button></a></div>
+                            </div>
+
+                            <hr>
+                        {% endfor %} 
+                    {% endif %}
+                </div>
+
+                <div id="responsive-list">
+                    {% if projets|length == 0 and imports|length == 0 %}
+                        Vous n'avez pas encore de projets. Débutez en un ou importez un déjà existant
+                    {% else %}
+                        <div id="entete-responsive">
+                            Liste de vos projets
+                        </div>
+
+                        {% for projet in projets %}
+                            <div class="ligne-responsive">
+                                <div class="nom-projet" id="nom-projet-{{projet.id}}">
+                                    {{ projet.nom }}
+                                    <i class="fa fa-angle-down"></i>
+                                </div>
+
+                                <div class="details-projet projet" id="details-projets-{{projet.id}}">
+                                    <hr>
+
+                                    <div class="ligne-details">
+                                        <div class="intitule">Code</div>
+                                        <div class="valeur">{{projet.code}}</div>
+                                    </div>
+                                    
+                                    <div class="ligne-details">
+                                        <div class="intitule">Statut</div>
+                                        <div class="valeur">{% if projet.estTermine %}Terminé {% else %}En cours{% endif %}</div>
+                                    </div>
+
+                                    <div class="ligne-option">
+                                        <a href="/projets/{{ projet.id }}/details"><button>Détails</button></a>
+                                    </div>
+
+                                </div>
+
+                                <hr>
+
+                                <script>
+                                    $("#nom-projet-{{projet.id}}").click(function(){
+                                        let visible = $("#details-projets-{{projet.id}}").hasClass('visible');
+                            
+                                        if (visible){
+                                            $("#details-projets-{{projet.id}}").slideUp();
+                                            $("#details-projets-{{projet.id}}").removeClass('visible');
+                                        }
+                            
+                                        else{
+                                            $("#details-projets-{{projet.id}}").addClass('visible');
+                                            $("#details-projets-{{projet.id}}").removeClass('projet');
+                                            $(".projet").slideUp();
+                                            $("#details-projets-{{projet.id}}").slideToggle();
+                                            $("#details-projets-{{projet.id}}").addClass('projet');
+                                        }
+                                    });
+                                </script>
+                            </div>
+                        {% endfor %}
+
+                        {% for projet in imports %}
+                            <div class="ligne-responsive">
+                                <div class="nom-projet" id="nom-projet-{{projet.id}}">
+                                    {{ projet.nom }}
+                                    <i class="fa fa-angle-down"></i>
+                                </div>
+
+                                <div class="details-projet projet" id="details-projets-{{projet.id}}">
+                                    <hr>
+
+                                    <div class="ligne-details">
+                                        <div class="intitule">Code</div>
+                                        <div class="valeur">{{projet.code}}</div>
+                                    </div>
+                                    
+                                    <div class="ligne-details">
+                                        <div class="intitule">Statut</div>
+                                        <div class="valeur">{% if projet.estTermine %}Terminé {% else %}En cours{% endif %}</div>
+                                    </div>
+
+                                    <div class="ligne-option">
+                                        <a href="/projets/{{ projet.id }}/details"><button>Détails</button></a>
+                                    </div>
+
+                                </div>
+
+                                <hr>
+
+                                <script>
+                                    $("#nom-projet-{{projet.id}}").click(function(){
+                                        let visible = $("#details-projets-{{projet.id}}").hasClass('visible');
+                            
+                                        if (visible){
+                                            $("#details-projets-{{projet.id}}").slideUp();
+                                            $("#details-projets-{{projet.id}}").removeClass('visible');
+                                        }
+                            
+                                        else{
+                                            $("#details-projets-{{projet.id}}").addClass('visible');
+                                            $("#details-projets-{{projet.id}}").removeClass('projet');
+                                            $(".projet").slideUp();
+                                            $("#details-projets-{{projet.id}}").slideToggle();
+                                            $("#details-projets-{{projet.id}}").addClass('projet');
+                                        }
+                                    });
+                                </script>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <div id="footer"><p><i class="fa fa-copyright"></i> Tout droits réservés , Oracle Logic Consulting SARL 2022</p></div>
+        </div>
+    </div>
+
+    <script>
+        $("#icons").click(function(){
+            let visible = $("#block-info-responsive").hasClass('visible');
+
+            if (visible)
+            {
+                $("#block-info-responsive").css('height', '0vh');
+                $("#block-info-responsive").removeClass('visible');
+            }
+            else{
+                $("#block-info-responsive").css('height', '25vh');
+                $("#block-info-responsive").addClass('visible');
+            }
+        });
+    </script>
+</body>
+</html>

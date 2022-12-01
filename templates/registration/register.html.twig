@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/registration.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/CSS/fontawesome/css/all.min.css') }}">
+    <title>Inscription</title>
+</head>
+<body>
+    <div id="bloc-page">
+        <div id="header">
+            Archi - Tech
+        </div>
+
+        <div id="section">
+            <div id="titre">
+                Configurez votre compte
+            </div>
+
+            <hr id="hr-titre">
+
+            {{ form_start(registrationForm) }}
+                {% if message %}
+                    <p color='red'>{{ message }}</p>
+                {% endif %}
+                <div class="champ">{{ form_row(registrationForm.nom) }}</div>
+                
+                <div class="champ">{{ form_row(registrationForm.prenom) }}</div>
+            
+                <div class="champ">{{ form_row(registrationForm.email) }}</div>
+                
+                <div class="champ">{{ form_row(registrationForm.telephone) }}</div>
+                
+                <div id='poste'>
+                    <div id='poste-titre'>Poste</div>
+                    {{ form_row(registrationForm.poste) }}
+                </div>
+                
+                <div class="champ">{{ form_row(registrationForm.plainPassword) }}</div>
+                
+                {{ form_row(registrationForm.agreeTerms) }}
+                                
+                <button type="submit" class="btn">Confirmez</button>
+            {{ form_end(registrationForm) }}
+
+            <div id="footer"><p><i class="fa fa-copyright"></i> Tout droits réservés , Oracle Logic Consulting SARL 2022</p></div>
+        </div>
+    </div>
+</body>
+</html>

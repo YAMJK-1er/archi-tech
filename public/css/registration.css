@@ -1,0 +1,275 @@
+/*Style global*/
+
+*
+{
+    margin : 0;
+    padding: 0;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+button
+{
+    cursor: pointer;
+}
+
+body
+{
+    position : relative ;
+}
+
+/*Fin style global*/
+
+/*Style de header*/
+
+#header
+{
+    height : 10vh ;
+    background: #ed8715;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 2em;
+    text-transform: uppercase;
+    letter-spacing: 15px;
+    font-weight: bold;
+    color : white ;
+}
+
+/*Fin Style de header*/
+
+/*Style de section*/
+
+#section
+{
+    width : 80%;
+    height : 80vh ;
+    padding: 5vh 10%;
+    background-color: #185359;
+}
+
+#titre
+{
+    font-size: 2em;
+    color: white;
+}
+
+#hr-titre
+{
+    border: none;
+    border-top: 2px solid #666;
+    margin: 2.5vh auto;
+}
+
+form
+{
+    width : 35%;
+    height : 60vh ;
+    padding: 2.5vh 2.5%;
+    margin: auto;
+    background: white;
+    margin-top: 5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 10px ;
+}
+
+#poste
+{
+    width : 100% ;
+    text-align: center;
+}
+
+#poste-titre
+{
+    font-size : 1.25em ;
+    font-weight: bolder ;
+    margin-bottom : 5px ;
+    color : #555;
+}
+
+.champ
+{
+    width : 100%;
+}
+input[type='text'] , input[type='email'] , input[type='password']
+{
+    width : 100% ;
+    padding-top : 5px ;
+    padding-bottom : 5px ;
+    font-size : 1.25em ;
+    border : none ;
+    border-bottom : 1px solid #888;
+    outline : none ;
+    text-align : center ;
+}
+
+input[type='radio']
+{
+    margin-right: 5px;
+    margin-left: 15px;
+}
+
+#registration_form_poste label
+{
+    font-size : 1em ;
+}
+
+label[for='registration_form_agreeTerms']
+{
+    font-size : 1.1em ;
+    margin-right : 10px ;
+}
+
+#registration_form_agreeTerms
+{
+    width : 15px ;
+    height : 15px ;
+}
+
+form button
+{
+    padding: 5px 25px ;
+    font-size : 1.1em;
+    border-radius: 5px;
+    background: #185359;
+    color: white;
+}
+
+#options
+{
+    width : 100% ;
+    display : flex ;
+    justify-content : space-around ;
+}
+
+form a
+{
+    color : white ;
+    text-decoration : none ;
+}
+
+#del
+{
+    background: red;
+}
+
+/*Fin style de section*/
+
+/*Style de footer*/
+
+#footer
+{
+    padding : 1vh 2vw ;
+    width: 80%;
+    position : absolute ;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color : white ;
+}
+
+/*Fin style de Footer*/
+
+@media screen and (min-width: 500px) and (max-width: 750px) {
+    #titre{
+        font-size: 1.5em;
+    }
+
+    #section{
+        height: 85vh;
+    }
+
+    form{
+        width: 80%;
+    }
+
+    #registration_form_poste label
+    {
+        font-size : 0.85em ;
+    }
+}
+
+@media screen and (min-width: 700px) and (max-width: 900px) {
+    #titre{
+        font-size: 1.5em;
+    }
+
+    #section{
+        height: 85vh;
+    }
+
+    form{
+        width: 60%;
+    }
+}
+
+@media screen and (min-width: 900px) and (max-width: 1200px) {
+    #titre{
+        font-size: 1.5em;
+    }
+
+    #section{
+        height: 85vh;
+    }
+
+    form{
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 500px){
+    #header{
+        font-size: 1.35em;
+        letter-spacing: 10px;
+    }
+
+    #titre{
+        font-size: 1.25em;
+    }
+
+    #footer{
+        font-size: 0.55em;
+    }
+
+    form{
+        width : 100%;
+    }
+
+    input[type='text'] , input[type='email'] , input[type='password']
+    {
+        font-size: 1em;
+    }
+
+    #poste-titre{
+        font-size: 1em;
+    }
+
+    #registration_form_poste label, #registration_form_type_admin_poste label
+    {
+        font-size : 0.8em ;
+    }
+
+    label[for='registration_form_agreeTerms']{
+        font-size: 0.9em;
+    }
+
+    #registration_form_agreeTerms
+    {
+        width : 10px ;
+        height : 10px ;
+    }
+
+    form button{
+        font-size: 1em;
+    }
+
+    input[type='radio']
+    {
+        margin-right: 2.5px;
+        margin-left: 5px;
+    }
+}

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {# <link type='text/css' rel="stylesheet" href="{{asset('css/CSS/showpdf.css')}}"> #}
+    <title>Document</title>
+
+<style>
+@media print {
+    .no-print {
+        display : none ;
+    }
+}
+
+*
+{
+    margin : 0;
+    padding : 0;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+h1
+{
+    width : 100%;
+    text-align: center;
+    margin : 25px auto;
+    text-transform: uppercase;
+    margin-top: 10vh ;
+}
+
+table
+{
+    margin : auto ;
+    text-align: center;
+    border-collapse: collapse;
+    margin-bottom : 25px ;
+}
+
+td
+{
+    padding : 10px;
+}
+
+thead
+{
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+hr
+{
+    margin : auto;
+    margin-bottom: 25px;
+    width : 25%;
+    border : none ;
+    border-top: 2px solid #666;
+}
+
+#taches
+{
+    width : 90% ;
+    margin: auto;
+    display: grid ;
+    grid-template-columns: repeat(3 , 1fr);
+    gap : 25px ;
+}
+</style>
+</head>
+<body>
+    <h1>Informations générales sur le projet</h1>
+
+    <hr>
+
+
+    <table border='1'>
+        <thead>
+            <tr>
+                <td>Nom du projet</td>
+                <td>Code du projet</td>
+                <td>Budget(Franc Cfa)</td>
+                <td>Delai d'exécution(mois)</td>
+                <td>Date de début</td>
+                <td>Statut</td>
+                <td>Date de fin</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>{{projet.nom}}</td>
+                <td>{{projet.code}}</td>
+                <td>{{projet.budget}}</td>
+                <td>{{projet.delai}}</td>
+                <td>{{projet.demarrage|date('d/m/Y')}}</td>
+                <td>{% if projet.estTermine %}Terminé {% else %}En cours{% endif %}</td>
+                <td>{% if projet.estTermine %}{{projet.fin}} {% else %}---{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Planning général des tâches</h1>
+
+    <hr>
+
+
+    {% if taches|length == 0 %}
+        <p>Vous n'avez pas encore enregistré de tâches à effectuer</p>
+    {% else %}
+        <table border='1'>
+            <thead>
+                <tr>
+                    <td>Intitulé</td>
+                    <td>Date de début prévisionnelle</td>
+                    <td>Délai prévisionnel</td>
+                    <td>Coût prévisionnel</td>
+                    <td>Date de début réel</td>
+                    <td>Date de fin</td>
+                    <td>Durée réelle</td>
+                    <td>Coût réel</td>
+                    <td>Statut</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for tache in taches %}
+                    <tr>
+                        <td>{{tache.intitule}}</td>
+                        <td>{{tache.debutPrev|date('d/m/Y')}}</td>
+                        <td>{{tache.delai}} mois</td>
+                        <td>{{tache.coutBase}} Fcfa</td>
+                        <td>{% if tache.debutReel %}{{tache.debutReel|date('d/m/Y')}}{% else %}---{% endif %}</td>
+                        <td>{% if tache.dateFin %}{{tache.dateFin|date('d/m/Y')}}{% else %}---{% endif %}</td>
+                        <td>{% if tache.delaiReel %}{{tache.delaiReel}} mois{% else %}---{% endif %}</td>
+                        <td>{% if tache.coutReel %}{{tache.coutReel}} Fcfa{% else %}---{% endif %}</td>
+                        <td>{% if tache.estRealise %}Réalisée{% else %}Non réalisée{% endif %}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>  
+    {% endif %}
+
+    <h1>Point de l'approvisionnement</h1>
+
+    <hr>
+
+
+    {% if elements|length == 0 %}
+        <p>Vous n'avez pas encore enregistré d'éléments d'approvisionnement</p>
+    {% else %}
+        <table border='1'>
+            <thead>
+                <tr>
+                    <td>Nom de l'élement</td>
+                    <td>Stock restant</td>
+                    <td>Unité d'oeuvre</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for element in elements %}
+                    <tr>
+                        <td>{{element.nom}}</td>
+                        <td>{{element.stockRestant}}</td>
+                        <td>{{element.uniteOeuvre}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <h1>Exécution financière</h1>
+
+    <hr>
+
+
+    <table border='1'>
+        <thead>
+            <tr>
+                <td>Désignation</td>
+                <td>Montant contrat TTC(Fcfa)</td>
+                <td>Montant total engagé(Fcfa)</td>
+                <td>Taux d'ecécution financière</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>Africa - Etudes</td>
+                <td>{{execfin.budget}}</td>
+                <td>{{execfin.depenses}}</td>
+                <td>{{execfin.taux * 100}}%</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Exécution physique</h1>
+
+    <hr>
+
+
+    <table border='1'>
+        <thead>
+            <tr>
+                <td>Début des travaux</td>
+                <td>Delai d'exécution(mois)</td>
+                <td>Nombres de mois consommés</td>
+                <td>Taux d'ecécution physique</td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>{{projet.demarrage|date('d/m/Y')}}</td>
+                <td>{{execphys.delai}}</td>
+                <td>{{execphys.duree}}</td>
+                <td>{{execphys.taux * 100}}%</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h1>Les observations</h1>
+
+    <hr>
+
+
+    {% if observations == 0 %}
+        <p>Aucune observation n'a encore été faite</p>
+    {% else %}
+        <table border='1'>
+            <thead>
+                <tr>
+                    <td>Auteur</td>
+                    <td>Poste</td>
+                    <td>Observation</td>
+                    <td>Date de l'observation</td>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for observ in observations %}
+                    <tr>
+                        <td>{{observ.auteur}}</td>
+                        <td>{{observ.poste}}</td>
+                        <td>{{observ.message}}</td>
+                        <td>{{ observ.date|date('d/m/Y')}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    
+</body>
+</html>

@@ -1,0 +1,51 @@
+#body h1
+{
+    width : 100%;
+    text-align: center;
+    margin-top: 5vh ;
+    font-size : 3em;
+    text-transform: uppercase;
+    font-weight: bolder;
+
+}
+
+#containers
+{
+    width : 90% ;
+    margin :auto;
+    text-align: center;
+    margin-top: 10vh;
+}
+
+.lignes
+{
+    display : flex ;
+    justify-content: space-between;
+}
+
+.colonne-demarrage , .colonne-delai
+{
+    width : 20%;
+}
+
+.colonne-budget , .colonne-fin , .colonne-statut , .colonne-option
+{
+    width : 15% ;
+}
+
+.entete
+{
+    font-weight: bolder;
+    font-size: 1.25em;
+}
+
+.corps
+{
+    font-size: 1.2em;
+}
+
+.lignes button
+{
+    padding: 3px 10px ;
+    border-radius: 7.5px;
+}

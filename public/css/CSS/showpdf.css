@@ -1,0 +1,55 @@
+/*Style global*/
+
+*
+{
+    margin : 0;
+    padding : 0;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+/*Fin style global*/
+
+h1
+{
+    width : 100%;
+    text-align: center;
+    margin : 5vh auto;
+    text-transform: uppercase;
+    margin-top: 10vh ;
+}
+
+table
+{
+    margin : auto ;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+td
+{
+    padding : 10px;
+}
+
+thead
+{
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+hr
+{
+    margin : auto;
+    margin-bottom: 5vh;
+    width : 25%;
+    border : none ;
+    border-top: 2px solid #666;
+}
+
+#taches
+{
+    width : 90% ;
+    margin: auto;
+    display: grid ;
+    grid-template-columns: repeat(3 , 1fr);
+    gap : 25px ;
+}

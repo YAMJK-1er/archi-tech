@@ -1,0 +1,166 @@
+/* #header
+{
+    width : 100% ;
+    height : 25vh ;
+    background : #0b2b40 ;
+    margin-bottom : 5vh ;
+    display : flex ;
+    justify-content : space-around ;
+}
+
+#logo
+{
+    width : 50% ;
+    height : 100% ;
+    margin : auto ;
+}
+
+
+
+#infos
+{
+    width : 25% ;
+    height : 20vh ;
+    margin-top : 2.5vh ;
+    display : flex ;
+    flex-direction : column ;
+    justify-content : space-between ;
+    font-size : 1.25em;
+    color : white ;
+}
+
+#infos-h
+{
+    text-align : center ;
+}
+
+#infos span
+{
+    font-weight : bolder ;
+}
+
+#decon
+{
+    padding : 5px ;
+    background : #185359 ;
+    font-size : 0.8em ;
+    color : white ;
+    border-radius : 5px ;
+    cursor : pointer ;
+}
+
+#btn
+{
+    text-align : center ;
+}
+
+h1
+{
+    width : 100% ;
+    height : 10vh ;
+    text-align :center ;
+    font-size : 2.75em ;
+    text-transform : uppercase ;
+    font-family : sans-serif ;
+    color : #444;
+    font-weight : bolder ;
+}
+
+#hr-titre
+{
+    width : 10% ;
+    border : none ;
+    border-top : 5px solid #185359 ;
+    margin : auto ;
+    margin-bottom : 5vh ;
+}
+
+#projet-text
+{
+    width : 100% ;
+    text-align : center ;
+    font-size : 1.75em ;
+    font-weight : bolder ;
+    color : #222;
+} */
+
+#container , #add
+{
+    width : 70% ;
+    padding-right : 15% ;
+    padding-left : 15% ;
+    margin-top : 7.5vh ;
+}
+
+.lignes
+{
+    display : flex ;
+    width : 100% ;
+    justify-content : space-between ;
+
+}
+
+.hr-lignes
+{
+    margin-bottom : 5vh ;
+    margin-top : 10px ;
+}   
+
+.colonne-nom
+{
+    width : 40% ;
+    text-align : left ;
+}
+
+.colonne-statut
+{
+    width : 20% ;
+    text-align : left ;
+}
+
+.colonne-option
+{
+    width : 10% ;
+    text-align : right ;
+}
+
+.entete
+{
+    font-size : 1.75em ;
+    font-weight : bolder ;
+}
+
+.description
+{
+    font-size : 1.25em ;
+}
+
+.option-btn
+{
+    padding : 5px ;
+    cursor : pointer ;
+    border-radius : 5px ;
+}
+
+#add
+{
+    display : flex ;
+    justify-content : space-around ;
+    margin-bottom : 10vh ;
+}
+
+.add-import
+{
+    padding : 10px ;
+    font-size : 1.1em ;
+    border-radius : 5px ;
+    background : #444;
+    color : white ;
+    cursor : pointer ;
+}
+
+*
+{
+margin : 0 ;
+padding : 0 ;
+}

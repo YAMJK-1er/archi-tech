@@ -1,0 +1,166 @@
+/*Style globale*/
+
+*
+{
+    margin : 0 ;
+    padding : 0 ;
+    font-family: Sans-serif ;
+}
+
+/*Fin Style globale*/
+
+/*Style de container*/
+
+#container
+{
+    display: flex ;
+}
+
+/*Fin Style de container*/
+
+/*Style du side-menu*/
+
+#side-menu
+{
+    width : 17.5% ;
+    height : 100vh ;
+    background: #000d16 ;
+    color : white;
+    
+}
+
+#profil-section
+{
+    width : 100% ;
+    height : 20vh ;
+    padding-top: 10px;
+    
+}
+
+#image
+{
+    width : 25% ;
+    height : 40% ;
+    margin : auto ;
+    border : 1px solid white ;
+    border-radius : 100% ;
+}
+
+#infos
+{
+    width : 100% ;
+    height : 30% ;
+    text-align: center;
+    margin-top: 10px;
+}
+
+#decon
+{
+    width : 100% ;
+    height : 20% ;
+    margin-top: 10px ;
+    text-align: center;
+}
+
+#decon button
+{
+    border-radius : 5px ;
+    padding: 3px 5px;
+}
+
+#projets-section
+{
+    width : 100% ;
+    height : 65vh ;
+    overflow: auto;
+}
+
+#projets-section #titre
+{
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: bold ;
+    font-size: 1.25em ;
+}
+
+#options-section
+{
+    width : 100% ;
+    height : 10vh ;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#options-section button
+{
+    padding: 3px 5px ;
+    border-radius: 5px ;
+}
+
+.li
+{
+    padding : 5px ;
+    position: relative;
+}
+
+.li .fleche
+{
+    position: absolute;
+    right : 15px;
+    font-size : 1.25em ;
+}
+
+
+.ul
+{
+    list-style-type: none;
+}
+
+hr
+{
+    border : none;
+    border-top: 1px solid white ;
+}
+
+/*Fin Style du side-menu*/
+
+/*Style de content*/
+#content
+{
+    width : 87.5%;
+    height: 100vh ;
+}
+
+#header
+{
+    width : 100% ;
+    height : 30vh ;
+}
+
+#logo
+{
+    width : 75% ;
+    height: 30vh ;
+    margin: auto;
+}
+
+#body
+{
+    width : 100%;
+    height : 55vh ;
+}
+
+#footer
+{
+    width : 100% ;
+    height : 5vh ;
+}
+
+#footer p
+{
+    line-height: 50px;
+}
+
+/*Fin Style de content*/

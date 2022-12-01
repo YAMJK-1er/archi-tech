@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        <link rel="stylesheet" href="{{ asset('css/base.css') }}">
+        <link rel="stylesheet" href="{{ asset('bundles/easyadmin/app.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/show_projet.css') }}">
+        {% block css %}{% endblock %}
+        <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+        {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
+        {% endblock %}
+
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
+
+    </head>
+    <body>
+        <div id="container">
+            <div id='side-menu'>
+                <div id='profil-section'>
+                    <div id="image">
+                    
+                    </div>
+
+                    <div id="infos">
+                        {{ user.prenom }} {{ user.nom }} <br> {{ user.poste }}
+                    </div>
+
+                    <div id="decon">
+                        <a href="/logout"><button>Se deconnecter</button></a>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div id="projets-section">
+                    <div id='titre'><i class="fas fa-building" align='center'></i> Vos projets ({{ projets|length + imports|length }})</div>
+                    <hr>
+                    <div id='section-projet1' class='section-projet ul'>
+                        {% if projets|length > 0 or imports|length > 0 %}
+                            {% for projet in projets %}
+                                {% if projet.id == id %}
+                                    <a href="/projet/{{ projet.id }}/details" style='color : white;'><div id='nom-projet{{ projet.id }}' class='nom-projet li'><i class="fa fa-building"></i> {{ projet.nom }} <i class="fa fa-angle-right fleche"></i></div></a>
+                                    <hr>
+                                    <div id='infos-projet{{ projet.id }}' class='infos-projet hide ul'>
+                                        <a style='color:white;' href="/projet/{{ projet.id }}/details/planning/{{ planning.id }}"><div id='planning{{ projet.id }}' class='planning li'><i class="fa fa-calendar-alt"></i> Planning <i class="fa fa-angle-right fleche"></i></div></a>
+                                        <div id='options-planning{{ projet.id }}' class='options-planning ul'>
+                                            <div class='li'><i class="fas fa-tasks"></i> Tâches à exécuter <i class="fa fa-angle-right fleche"></i></div>
+                                            <div class='li'><i class="fas fa-tasks"></i> Tâches exécutée <i class="fa fa-angle-right fleche"></i></div>
+                                        </div>
+                                        <a style='color:white;' href="/projet/{{ projet.id }}/details/approvisionnement/{{ approv.id }}"><div class='li'><i class="fas fa-briefcase"></i> Approvisionnement <i class="fa fa-angle-right fleche"></i></div></a>
+                                        <a style='color:white;' href="/projet/{{ projet.id }}/details/executionfinanciere/{{ execfin.id }}"><div class='li'><i class="fas fa-edit"></i> Exécution financière <i class="fa fa-angle-right fleche"></i></div></a>
+                                        <a style='color:white;' href="/projet/{{ projet.id }}/details/executionphysique/{{ execphys.id }}"><div class='li'><i class="fas fa-edit"></i> Exécution physique <i class="fa fa-angle-right fleche"></i></div></a>
+                                        <a style='color:white;' href="/projet/{{ projet.id }}/details/observations"><div class='li'><i class="fas fa-eye"></i> Observations <i class="fa fa-angle-right fleche"></i></div></a>
+                                        <a style='color:white;' href="/projet/{{ projet.id }}/details/images"><div class='li'><i class="fas fa-file-image"></i> Images <i class="fa fa-angle-right fleche"></i></div></a>
+                                        <hr>
+                                    </div>   
+                                {% else %}
+                                    <a href="/projet/{{ projet.id }}/details" style='color : white;'><div id='nom-projet{{ projet.id }}' class='nom-projet li'><i class="fa fa-building"></i> {{ projet.nom }} <i class="fa fa-angle-right fleche"></i></div></a>
+                                    <hr>
+                                    <div id='infos-projet{{ projet.id }}' class='infos-projet hide ul'>
+                                        <div id='planning{{ projet.id }}' class='planning li'><i class="fa fa-calendar-alt"></i> Planning <i class="fa fa-angle-right fleche"></i></div>
+                                        <div id='options-planning{{ projet.id }}' class='options-planning ul'>
+                                            <div class='li'><i class="fas fa-tasks"></i> Tâches à exécuter <i class="fa fa-angle-right fleche"></i></div>
+                                            <div class='li'><i class="fas fa-tasks"></i> Tâches exécutée <i class="fa fa-angle-right fleche"></i></div>
+                                        </div>
+                                        <div class='li'><i class="fas fa-briefcase"></i> Approvisionnement <i class="fa fa-angle-right fleche"></i></div>
+                                        <div class='li'><i class="fas fa-edit"></i> Exécution financière <i class="fa fa-angle-right fleche"></i></div>
+                                        <div class='li'><i class="fas fa-edit"></i> Exécution physique <i class="fa fa-angle-right fleche"></i></div>
+                                        <div class='li'><i class="fas fa-eye"></i> Observations <i class="fa fa-angle-right fleche"></i></div>
+                                        <div class='li'><i class="fas fa-file-image"></i> Images <i class="fa fa-angle-right fleche"></i></div> 
+                                        <hr>
+                                    </div> 
+                                {% endif %}
+
+                                
+                                <script>
+                                    {% if projet.id == id  %}
+                                        $('#infos-projet{{ projet.id }}').css('display' , 'block');
+                                    {% else %}
+                                        $('#infos-projet{{ projet.id }}').css('display' , 'none');
+                                    {% endif %}
+                                    
+                                    $('#options-planning{{ projet.id }}').css('display' , 'none');
+                                    $('#nom-projet{{ projet.id }}').click(function(){
+                                        $('#infos-projet{{ projet.id }}').slideToggle();
+                                        $('#infos-projet{{ projet.id }}').removeClass('hide');
+                                        $('.hide').slideUp();
+                                        $('#infos-projet{{ projet.id }}').addClass('hide');
+                                    });
+                                    $('#planning{{ projet.id }}').click(function(){
+                                        $('#options-planning{{ projet.id }}').slideToggle();
+                                    });
+                                </script>
+                            {% endfor %}
+                            {% for importprojet in imports %}
+                                {% if importprojet.id == id %}
+                                    <a href="/projet/{{ importprojet.id }}/details" style='color : white;'><div id='nom-projet{{ projet.id }}' class='nom-projet li'><i class="fa fa-building"></i> {{ projet.nom }} <i class="fa fa-angle-right fleche"></i></div></a>
+                                    <hr>
+                                    <div id='infos-projet{{ importprojet.id }}' class='infos-projet hide ul'>
+                                        <a style='color:white;' href="/projet/{{ importprojet.id }}/details/planning/{{ planning.id }}"><div id='planning{{ projet.id }}' class='planning li'><i class="fa fa-calendar-alt"></i> Planning <i class="fa fa-angle-right fleche"></i></div></a>
+                                        <div id='options-planning{{ importprojet.id }}' class='options-planning ul'>
+                                            <div class='li'><i class="fas fa-tasks"></i> Tâches à exécuter <i class="fa fa-angle-right fleche"></i></div>
+                                            <div class='li'><i class="fas fa-tasks"></i> Tâches exécutée <i class="fa fa-angle-right fleche"></i></div>
+                                        </div>
+                                        <a style='color:white;' href="/projet/{{ importprojet.id }}/details/approvisionnement/{{ approv.id }}"><div class='li'><i class="fas fa-briefcase"></i> Approvisionnement <i class="fa fa-angle-right fleche"></i></div></a>
+                                        <a style='color:white;' href="/projet/{{ importprojet.id }}/details/executionfinanciere/{{ execfin.id }}"><div class='li'><i class="fas fa-edit"></i> Exécution financière <i class="fa fa-angle-right fleche"></i></div></a>
+                                        <a style='color:white;' href="/projet/{{ importprojet.id }}/details/executionphysique/{{ execphys.id }}"><div class='li'><i class="fas fa-edit"></i> Exécution physique <i class="fa fa-angle-right fleche"></i></div></a>
+                                        <a style='color:white;' href="/projet/{{ importprojet.id }}/details/observations"><div class='li'><i class="fas fa-eye"></i> Observations <i class="fa fa-angle-right fleche"></i></div></a>
+                                        <a style='color:white;' href="/projet/{{ importprojet.id }}/details/images"><div class='li'><i class="fas fa-file-image"></i> Images <i class="fa fa-angle-right fleche"></i></div></a>
+                                        <hr>
+                                    </div> 
+                                {% else %}
+                                    <a href="/projet/{{ importprojet.id }}/details" style='color : white;'><div id='nom-projet{{ importprojet.id }}' class='nom-projet li'><i class="fa fa-building"></i> {{ importprojet.nom }} <i class="fa fa-angle-right fleche"></i></div></a>
+                                    <hr>
+                                    <div id='infos-projet{{ importprojet.id }}' class='infos-projet hide ul'>
+                                        <div id='planning{{ importprojet.id }}' class='planning li'><i class="fa fa-calendar-alt"></i> Planning <i class="fa fa-angle-right fleche"></i></div>
+                                        <div id='options-planning{{ importprojet.id }}' class='options-planning ul'>
+                                            <div class='li'><i class="fas fa-tasks"></i> Tâches à exécuter <i class="fa fa-angle-right fleche"></i></div>
+                                            <div class='li'><i class="fas fa-tasks"></i> Tâches exécutée <i class="fa fa-angle-right fleche"></i></div>
+                                        </div>
+                                        <div class='li'><i class="fas fa-briefcase"></i> Approvisionnement <i class="fa fa-angle-right fleche"></i></div>
+                                        <div class='li'><i class="fas fa-edit"></i> Exécution financière <i class="fa fa-angle-right fleche"></i></div>
+                                        <div class='li'><i class="fas fa-edit"></i> Exécution physique <i class="fa fa-angle-right fleche"></i></div>
+                                        <div class='li'><i class="fas fa-eye"></i> Observations <i class="fa fa-angle-right fleche"></i></div>
+                                        <div class='li'><i class="fas fa-file-image"></i> Images <i class="fa fa-angle-right fleche"></i></div> 
+                                        <hr>
+                                    </div>
+                                {% endif %}
+                                
+                                <script>
+                                    {% if importprojet.id == id  %}
+                                            $('#infos-projet{{ importprojet.id }}').css('display' , 'block');
+                                        {% else %}
+                                            $('#infos-projet{{ importprojet.id }}').css('display' , 'none');
+                                    {% endif %}
+                                    
+                                    
+                                    $('#options-planning{{ importprojet.id }}').css('display' , 'none');
+                                    $('#nom-projet{{ importprojet.id }}').click(function(){
+                                        $('#infos-projet{{ importprojet.id }}').slideToggle();
+                                        $('#infos-projet{{ importprojet.id }}').removeClass('hide');
+                                        $('.hide').slideUp();
+                                        $('#infos-projet{{ importprojet.id }}').addClass('hide');
+                                    });
+                                    $('#planning{{ importprojet.id }}').click(function(){
+                                        $('#options-planning{{ importprojet.id }}').slideToggle();
+                                    });
+                                </script>
+                            {% endfor %}   
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div id="options-section">
+                    <div>
+                        <a href=""><button>Debuter un projet</button></a>
+                    </div>
+                    <div>
+                        <a href=""><button>Importer un projet</button></a>
+                    </div>
+                </div>
+            </div>
+
+            <div id='content'>
+                <div id='header'>
+                    <div id='logo'>
+                        <img src="{{ asset('images/AE-PNG.png')}}" alt="" width='100%' height='100%'>
+                    </div>
+                </div>
+
+                <hr style='border:none;border-top:2px solid #000d16;'>
+
+                <div id="body">
+                    <h1>{{ projet.nom }}</h1>
+                    <hr style='width:30%;margin:auto;border:none;border-top:5px solid black;margin-bottom:5vh;'>
+                    <div id="containers">
+                        <div class='lignes'>
+                            <div class="colonne-demarrage entete">
+                                Date de demarrage
+                            </div>
+
+                            <div class="colonne-delai entete">
+                                Delai d'execution(mois)
+                            </div>
+
+                            <div class="colonne-budget entete">
+                                Budget(Fcfa)
+                            </div>
+
+                            <div class="colonne-fin entete">
+                                Date de fin
+                            </div>
+
+                            <div class="colonne-statut entete">
+                                Statut
+                            </div>
+
+                            {% if projet.estTermine == false %}
+                                <div class='colonne-option entete'>
+                                    Option
+                                </div>
+                            {% endif %}    
+                        </div>
+
+                        <hr>
+
+                        <div class='lignes'>
+                            <div class="colonne-demarrage corps">
+                                {{ projet.demarrage|date('d/m/Y') }}
+                            </div>
+
+                            <div class="colonne-delai corps">
+                                {{ projet.delai }}
+                            </div>
+
+                            <div class="colonne-budget corps">
+                                {{ projet.budget }}
+                            </div>
+
+                            <div class="colonne-fin corps">
+                                {% if projet.fin %}
+                                    {{ projet.fin|date('d/m/Y') }}
+                                {% endif %}
+                            </div>
+
+                            <div class="colonne-statut corps">
+                                {% if projet.estTermine == true %}
+                                    Terminée
+                                {% else %}
+                                    En cours
+                                {% endif %}
+                            </div>
+
+                            {% if projet.estTermine == false %}
+                                <div class='colonne-option corps'>
+                                    <button>Terminer</button>
+                                </div>
+                            {% endif %}    
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="footer">
+                    <p align='center'><i class="fa fa-copyright"></i> Tout droits réservés, AFRICA ETUDES 2022</p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

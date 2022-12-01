@@ -1,0 +1,257 @@
+/*Style globale*/
+
+*
+{
+    margin: 0;
+    padding: 0;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+button
+{
+    cursor: pointer;
+}
+
+body
+{
+    position : relative ;
+}
+
+/*Fin Style globale*/
+
+/*Style du header*/
+
+#header
+{
+    width : 90% ;
+    padding-left: 5%;
+    padding-right: 5%;
+    height : 7.5vh ;
+    display: flex ;
+    justify-content: space-between;
+    align-items: center;
+    background: #ed8715;
+    color : white;
+}
+
+#infos-profil
+{
+    width: 40%;
+    display: flex;
+    justify-content: space-between;
+}
+
+#logo
+{
+    text-transform: uppercase;
+    font-weight: bolder ;
+    font-size: 1.25em;
+    letter-spacing: 5px;
+}
+
+.info button
+{
+    padding: 3px 20px;
+    border-radius: 5px;
+    background: #185359;
+    color: white;
+}
+
+#infos-profil-icons
+{
+    position: relative;
+}
+
+#block-info-responsive{
+    position: absolute; 
+    z-index: 2;
+    top : 35px;
+    left: -195px;
+    width : 250px;
+    height: 0vh;
+    background-color: #ed8715;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    overflow: hidden;
+    transition : 0.5s;
+    border-radius: 0 0 15px 15px;
+}
+
+/*Fin Style du header*/
+
+/*Style de section*/
+#section
+{
+    width : 90% ;
+    height : 82.5vh;
+    padding: 5vh 5% ;
+    background: #0b2b40;
+}
+
+#section #titre
+{
+    font-size: 2em;
+    color: white;
+}
+
+#hr-titre
+{
+    border: none;
+    border-top: 2px solid #666;
+    margin: 2.5vh auto;
+}
+
+form
+{
+    width : 30%;
+    height : 40vh ;
+    padding: 2.5vh 2.5%;
+    background: white;
+    margin: auto;
+    margin-top: 10vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 10px;
+}
+
+form[name='share_project_form']{
+    width : 30%;
+    height : 50vh ;
+    padding: 2.5vh 2.5%;
+    background: white;
+    margin: auto;
+    margin-top: 10vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.champ
+{
+    width : 100%;
+}
+
+input
+{
+    width : 100% ;
+    padding-top : 5px ;
+    padding-bottom : 5px ;
+    font-size : 1.25em ;
+    border : none ;
+    border-bottom : 1px solid #888;
+    outline : none ;
+    text-align : center ; 
+}
+
+form button
+{
+    width : 30% ;
+    align-self : center ;
+    padding-top : 3px ;
+    padding-bottom : 3px ;
+    font-size : 1em ;
+    background : #185359 ;
+    color : white ;
+    border-radius : 5px ;
+}
+
+a
+{
+    color : white ;
+    text-decoration : none ;
+}
+
+#options
+{
+    width : 100% ;
+    display : flex ;
+    justify-content : space-around ;
+}
+
+#cancel
+{
+    background: red;
+}
+
+.intitule{
+    text-align : center ;
+    margin-bottom : 10px ;
+    font-weight : bolder ;
+    font-size : 1.25em ;
+    color : #666;
+}
+/*Fin style de section*/
+
+/*Style de footer*/
+
+#footer
+{
+    padding : 1vh 2vw ;
+    position : absolute ;
+    margin: auto;
+    bottom: 0;
+    width : 80%;
+    color : white ;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/*Fin style de Footer*/
+
+@media screen and (max-width: 1200px) {
+    form, form[name='share_project_form']{
+        width: 40%;
+    }
+}
+
+@media screen and (max-width: 1000px) {
+    form, form[name='share_project_form']{
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    form, form[name='share_project_form']{
+        width: 60%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    form, form[name='share_project_form']{
+        width: 75%;
+    }
+}
+
+@media screen and (max-width: 500px){
+    #section #titre{
+        font-size: 1.5em;
+    }
+
+    #footer{
+        font-size: 0.65em;
+    }
+
+    form, form[name='share_project_form']{
+        width: 85%;
+    }
+
+    input{
+        font-size: 1em;
+    }
+
+    form button{
+        font-size: 0.9em;
+    }
+
+    #block-info-responsive
+    {
+        width: 230px;
+    }
+}

@@ -1,0 +1,330 @@
+/*Style globale*/
+
+*
+{
+    margin: 0;
+    padding: 0;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+button
+{
+    cursor: pointer;
+}
+
+body
+{
+    position : relative ;
+}
+
+/*Fin Style globale*/
+
+/*Style du header*/
+
+#header
+{
+    width : 90% ;
+    padding-left: 5%;
+    padding-right: 5%;
+    height : 7.5vh ;
+    display: flex ;
+    justify-content: space-between;
+    align-items: center;
+    background: #ed8715;
+    color : white;
+}
+
+#infos-profil
+{
+    width: 40%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#logo
+{
+    text-transform: uppercase;
+    font-weight: bolder ;
+    font-size: 1.25em;
+    letter-spacing: 5px;
+}
+
+.info button
+{
+    padding: 3px 20px;
+    border-radius: 5px;
+    background: #185359;
+    color: white;
+}
+
+#infos-profil-icons
+{
+    position: relative;
+}
+
+#block-info-responsive{
+    position: absolute;
+    z-index: 2;
+    top : 35px;
+    left: -195px;
+    width : 250px;
+    height: 0vh;
+    background-color: #ed8715;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    overflow: hidden;
+    transition : 0.5s;
+    border-radius: 0 0 15px 15px;
+}
+
+#icons{
+    cursor: pointer;
+}
+
+/*Fin Style du header*/
+
+
+/*Style de section*/
+#section
+{
+    width : 90% ;
+    height : 82.5vh;
+    padding: 5vh 5% ;
+    background: #0b2b40;
+}
+
+#section #titre
+{
+    font-size: 2em;
+    color: white;
+}
+
+#hr-section-titre
+{
+    border: none;
+    border-top: 2px solid #666;
+    margin: 2.5vh auto;
+}
+
+#list-projets
+{
+    width : 95% ;
+    height: 65vh;
+    padding : 2vh 2.5% ;
+    background: white;
+    overflow-y: auto;
+}
+
+
+#bande
+{
+    width : 100%;
+    height: 3vh;
+    background: #ed8715;
+}
+
+#options-add-import
+{
+    width : 95% ;
+    padding-right: 5%;
+    margin-bottom: 5vh;
+    margin-top: 2.5vh;
+}
+
+#options-add-import button
+{
+    padding: 5px 25px ;
+    background: #185359;
+    color : white;
+    font-size: 1em;
+    border-radius: 5px ;
+    margin-top: 2vh;
+}
+
+#entete
+{
+    width : 97.5% ;
+    padding : 1vh 0 1vh 2.5%;
+    background: #1d71b8;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+}
+
+.lignes
+{
+    width : 97.5% ;
+    padding : 2vh 0 2vh 2.5%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.15em;
+    color: #444;
+    cursor: pointer;
+}
+
+.colonne-nom
+{
+    width : 40%;
+}
+
+.colonne-statut , .colonne-option , .colonne-code
+{
+    width : 20%;
+    text-align: center;
+}
+
+.colonne-option button
+{
+    padding: 3px 25px;
+    font-size: 1em;
+    border-radius: 5px ;
+    background: #185359;
+    color: white;
+}
+/*Fin style de section*/
+
+/*Style de footer*/
+
+#footer
+{
+    padding : 1vh 2vw;
+    position : absolute ;
+    margin: auto;
+    bottom: 0;
+    width : 80%;
+    color : white ;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#responsive-list
+{
+    display: none;
+}
+ 
+/*Fin style de Footer*/
+
+@media screen and (max-width: 1050px) {
+    #infos-profil{
+        width : 50%;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    #infos-profil{
+        width : 60%;
+    }
+    #footer {
+        width: 80%;
+    }
+}
+
+@media screen and (max-width: 750px){
+    #list{
+        display: none;
+    }
+
+    #responsive-list
+    {
+        display: block;
+    }
+
+    #infos-profil{
+        display: none;
+    }
+
+    #options-add-import button{
+        font-size: 0.9em;
+    }
+
+    #entete-responsive
+    {
+        width : 97.5% ;
+        padding : 1vh 0 1vh 2.5%;
+        background: #1d71b8;
+        color: white;
+        font-weight: bolder;
+        font-size: 1.2em;
+        text-align: center;
+    }
+
+    .ligne-responsive
+    {
+        width : 97.5% ;
+        padding : 2vh 0 2vh 2.5%;
+        color: #444;
+        font-size: 1.15em;
+    }
+
+    .ligne-responsive hr
+    {
+        width : 95%;
+        margin-top: 2vh;
+    }
+
+    .nom-projet
+    {
+        position : relative;
+    }
+
+    .nom-projet i
+    {
+        position: absolute;
+        right: 5%;
+    }
+
+    .ligne-details
+    {
+        width: 75%;
+        display: flex;
+        justify-content: space-between;
+        padding: 1vh 5%;
+    }
+
+    .details-projet{
+        display: none;
+    }
+
+    .ligne-option
+    {
+        width: 75%;
+        margin-top: 2vh;
+        display: flex;
+        justify-content: center;
+    }
+
+    .ligne-option button
+    {
+        padding: 5px 25px ;
+        background: #185359;
+        color : white;
+        font-size: 0.75em;
+        border-radius: 5px ;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    #footer{
+        font-size: 0.65em;
+    }
+
+    #section #titre{
+        font-size: 1.5em;
+    }
+
+    #options-add-import button{
+        padding: 5px 10px;
+        font-size: 0.70em;
+    }
+
+    #block-info-responsive
+    {
+        width: 230px;
+    }
+}

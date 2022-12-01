@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/CSS/create_projet.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/CSS/fontawesome/css/all.min.css') }}">
+    <title>Création de projet</title>
+</head>
+<body>
+    <div id="header">
+        <div id="logo">
+            Archi - Tech
+        </div>
+
+        <div id="infos-profil-icons">
+            <i class="fa fa-user-circle fa-2x" id="icons"></i>
+            <div id="block-info-responsive">
+                <div class="info"><i class="fa fa-user"></i> {{ user.prenom }} {{ user.nom }} </div>
+                <div class="info"><i class="fa fa-user-tie"></i> {{ user.poste }}</div>
+                <div class="info"><a href="/logout"><button><i class="fa fa-sign-out-alt"></i> Deconnexion</button></a></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="section">
+        <div id="titre">
+            Création de projet
+        </div>
+
+        <hr id="hr-titre">
+
+        {{ form_start(form) }}
+            <div class="champs">{{ form_row(form.nom) }}</div>
+            
+            <div>
+                <div id="demarrage-label">
+                    <label>Date de demarrage</label>
+                </div>
+                {{ form_row(form.demarrage) }}
+            </div>
+            
+            <div class="champs">{{ form_row(form.delai) }}</div>
+            
+            <div class="champs">{{ form_row(form.budget) }}</div>
+
+            <div id='options'>
+                <button type='submit'>Créer</button>
+                <button id='cancel'><a href="/projets">Annuler</a></button>
+            </div>
+        {{ form_end(form) }}
+
+        <div id="footer"><p><i class="fa fa-copyright"></i> Tout droits réservés , Oracle Logic Consulting SARL 2022</p></div>
+    </div>
+
+    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+
+    <script>
+        $("#icons").click(function(){
+            let visible = $("#block-info-responsive").hasClass('visible');
+
+            if (visible)
+            {
+                $("#block-info-responsive").css('height', '0vh');
+                $("#block-info-responsive").removeClass('visible');
+            }
+            else{
+                $("#block-info-responsive").css('height', '25vh');
+                $("#block-info-responsive").addClass('visible');
+            }
+        });
+    </script>
+</body>
+</html>

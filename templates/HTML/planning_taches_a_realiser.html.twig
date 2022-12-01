@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{asset('css/CSS/planning_tache_a_realiser.css')}}">
+    <link rel="stylesheet" href="{{asset('css/CSS/fontawesome/css/all.min.css')}}">
+    <script src="{{asset('js/jquery-3.6.0.min.js')}}"></script>
+    <title>{{ projet.nom }} - Tâches à réaliser</title>
+</head>
+<body>
+    <div id="header">
+        <div id="click-menu">
+            <i class="fa fa-bars close"></i>
+        </div>
+
+        <div id="logo">
+            Archi - Tech
+        </div>
+
+        <div id="infos-profil-icons">
+            <i class="fa fa-user-circle fa-2x" id="icons"></i>
+            <div id="block-info-responsive">
+                <div class="info-responsive"><i class="fa fa-user"></i> {{ user.prenom }} {{ user.nom }} </div>
+                <div class="info-responsive"><i class="fa fa-user-tie"></i> {{ user.poste }}</div>
+                <div class="info-responsive"><a href="/logout"><button><i class="fa fa-sign-out-alt"></i> Deconnexion</button></a></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="section">
+        <div id="side-menu">
+            <div id="nom-projet">
+                {{ projet.nom }}
+            </div>
+
+            <hr class="hr-side-menu">
+            
+            <div id="options-details">
+                <a href="/projets/{{projet.id}}/details"><div class="option" id="active"><i class="fa fa-info-circle"></i> Informations <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <a href="/projets/{{projet.id}}/details/planning/{{ planning.id }}"><div class="option" id="planning"><i class="fa fa-calendar-alt"></i> Planning des tâches <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <div id="planning-sub-menu">
+                    <a href="/projets/{{projet.id}}/details/planning/{{ planning.id }}/taches_a_realiser"><div class="option active"><i class="fa fa-calendar-alt"></i> Tâches à réaliser <i class="fa fa-angle-right fleche"></i></div></a>
+
+                    <hr class="hr-side-menu">
+
+                    <a href="/projets/{{projet.id}}/details/planning/{{ planning.id }}/taches_realisees"><div class="option"><i class="fa fa-calendar-alt"></i> Tâches déjà réalisées <i class="fa fa-angle-right fleche"></i></div></a>
+
+                    <hr class="hr-side-menu">
+                </div>
+
+                <a href="/projets/{{projet.id}}/details/approvisionnement/{{ approv.id }}"><div class="option"><i class="fa fa-briefcase"></i> Approvisionnement <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <a href="/projets/{{projet.id}}/details/depenses"><div class="option"><i class="fas fa-money-bill-wave-alt"></i> Dépenses <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <a href="/projets/{{projet.id}}/details/execution_financiere/{{ execfin.id }}"><div class="option"><i class="fa fa-edit"></i> Exécution financière <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <a href="/projets/{{projet.id}}/details/execution_physique/{{ execphys.id }}"><div class="option"><i class="fa fa-edit"></i> Exécution physique <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <a href="/projets/{{projet.id}}/details/observations"><div class="option"><i class="fa fa-eye"></i> Observations <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <a href="/projets/{{projet.id}}/details/images"><div class="option"><i class="fa fa-file-image"></i> Images <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <a href="/projets/{{projet.id}}/details/plans"><div class="option"><i class="fas fa-file-alt"></i> Bibliothèque <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+
+                <a href="/projets"><div class="option"><i class="fa fa-building"></i> Liste de vos projets <i class="fa fa-angle-right fleche"></i></div></a>
+
+                <hr class="hr-side-menu">
+            </div>
+        </div>
+
+        <div id="content">
+            <div id="titre">
+                Les tâches à réaliser
+            </div>
+
+            <hr id="hr-content-titre">
+
+            <div id="bande"></div>
+
+            <div id="planning-gen">
+                {% if taches|length == 0 %}
+                    <p id='zero'>Vous n'avez pas encore ajouté de tâches</p>
+                {% else %}
+                    <div id="entete">
+                        <div class="colonne-intitule">Intitulé</div>
+                        <div class="colonne-detail">Informations</div>
+                        <div class="colonne-statut">Statut</div>
+                        {% if user.poste != 'Client'  and projet.estTermine == false%}
+                            <div class="colonne-option">Option</div>
+                        {% endif %} 
+                    </div>
+
+                    {% for tache in taches %}
+                        {% if tache.estRealise == false %}
+                        <div id="tache{{tache.id}}">
+                            <div class="lignes">
+                                <div class="colonne-intitule">{{tache.intitule}}</div>
+                                <div class="colonne-detail"><button class="detail" id="detail{{tache.id}}"> <span id="texte">Détails</span> <i class="fa fa-angle-down" id="angle"></i></button></div>
+                                <div class="colonne-statut">{% if tache.estRealise %}Réalisée {% else %}Non réalisée{% endif %}</div>
+                                {% if user.poste != 'Client'  and projet.estTermine == false %}
+                                    <div class="colonne-option"><a href="/projets/{{projet.id}}/planning/{{planning.id}}/tache/{{tache.id}}/delete"><button id="del">Supprimer</button></a></div>
+                                {% endif %}   
+                            </div>
+
+                            <div id="infos-tache{{tache.id}}" class="infos-tache">
+                                <div class="lignes-infos">
+                                    <div class="libelle">Date de début prévisionnelle</div>
+                                    <div class="info">{{tache.debutPrev|date('d/m/Y')}}</div>
+                                </div>
+
+                                <hr class="hr-infos-tache">
+
+                                <div class="lignes-infos">
+                                    <div class="libelle">Délai prévisionnel(jours)</div>
+                                    <div class="info">{{ tache.delai }}</div>
+                                </div>
+
+                                <hr class="hr-infos-tache">
+
+                                <div class="lignes-infos">
+                                    <div class="libelle">Coût prévisionnel(Fcfa)</div>
+                                    <div class="info">{{tache.coutBase}}</div>
+                                </div>
+
+                                <hr class="hr-infos-tache">
+
+                                <div class="lignes-infos">
+                                    <div class="libelle">Date de début réelle</div>
+                                    <div class="info">{% if tache.debutReel %}{{tache.debutReel|date('d/m/Y')}}{% else %}---{% endif %}</div>
+                                </div>
+
+                                <hr class="hr-infos-tache">
+
+                                <div class="lignes-infos">
+                                    <div class="libelle">Date de fin réelle</div>
+                                    <div class="info">{% if tache.dateFin %}{{tache.dateFin|date('d/m/Y')}}{% else %}---{% endif %}</div>
+                                </div>
+
+                                <hr class="hr-infos-tache">
+
+                                <div class="lignes-infos">
+                                    <div class="libelle">Durée réelle(jours)</div>
+                                    <div class="info">{% if tache.delaiReel %}{{tache.delaiReel}}{% else %}---{% endif %}</div>
+                                </div>
+
+                                <hr class="hr-infos-tache">
+
+                                <div class="lignes-infos">
+                                    <div class="libelle">Coût réel(Fcfa)</div>
+                                    <div class="info">{% if tache.coutReel %}{{tache.coutReel}}{% else %}---{% endif %}</div>
+                                </div>
+
+                                {% if user.poste != 'Client' and tache.estRealise == false and projet.estTermine == false %}
+                                    <hr class="hr-infos-tache">
+
+                                    <div class="option-modifier">
+                                        <a href="/projets/{{projet.id}}/planning/{{planning.id}}/tache/{{tache.id}}/edit"><button>Modifier</button></a>
+                                    </div>   
+                                {% endif %}
+                                
+                            </div>
+
+                            <script>
+                                $('#infos-tache{{tache.id}}').css('display' , 'none');
+                                $('#detail{{tache.id}}').click(function(){
+                                    var visible = $('#infos-tache{{tache.id}}').hasClass('visible');
+                                    if(visible == true)
+                                    {
+                                        $('#infos-tache{{tache.id}}').slideUp();
+                                        $('#infos-tache{{tache.id}}').removeClass('visible');
+                                    }
+                                    else
+                                    {
+                                        $('#infos-tache{{tache.id}}').addClass('visible');
+                                        $('#infos-tache{{tache.id}}').removeAttr('infos-tache');
+                                        $('.infos-tache').slideUp();
+                                        $('#infos-tache{{tache.id}}').slideToggle();
+                                        $('#infos-tache{{tache.id}}').addClass('infos-tache');
+                                    }
+                                });
+                            </script>
+                        </div>                
+                        <hr class="hr-planning">
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div id="footer"><p><i class="fa fa-copyright"></i> Tout droits réservés , Oracle Logic Consulting SARL 2022</p></div>
+       
+        </div>
+    </div>
+
+    <script>
+        $("#click-menu").click(function(){
+            let visible = $("#side-menu").hasClass('visible');
+
+            if(visible){
+                $("#click-menu i").removeClass('fa-plus');
+                $("#click-menu i").addClass('fa-bars');
+                $("#side-menu").css('left', '-100%');
+                $("#side-menu").removeClass('visible');
+            }
+            else{
+                $("#click-menu i").removeClass('fa-bars');
+                $("#click-menu i").addClass('fa-plus');
+                $("#side-menu").css('left', '0');
+                $("#side-menu").addClass('visible');
+            }
+        });
+
+        $("#icons").click(function(){
+            let visible = $("#block-info-responsive").hasClass('visible');
+
+            if (visible)
+            {
+                $("#block-info-responsive").css('height', '0vh');
+                $("#block-info-responsive").removeClass('visible');
+            }
+            else{
+                $("#block-info-responsive").css('height', '25vh');
+                $("#block-info-responsive").addClass('visible');
+            }
+        });
+    </script>
+</body>
+</html>
