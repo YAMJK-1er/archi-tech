@@ -34,13 +34,6 @@ button
     color : white;
 }
 
-#infos-profil
-{
-    width: 40%;
-    display: flex;
-    justify-content: space-between;
-}
-
 #logo
 {
     text-transform: uppercase;
@@ -49,38 +42,19 @@ button
     letter-spacing: 5px;
 }
 
-.info-responsive button
-{
-    padding: 3px 15px;
-    border-radius: 5px;
-    background: #185359;
-    color: white;
-}
-
 #click-menu{
     display: none;
 }
 
 #infos-profil-icons
 {
-    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-#block-info-responsive{
-    position: absolute;
-    z-index: 2;
-    top : 35px;
-    left: -195px;
-    width : 250px;
-    height: 0vh;
-    background-color: #ed8715;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    overflow: hidden;
-    transition : 0.5s;
-    border-radius: 0 0 15px 15px;
+#infos-profil-icons i{
+    letter-spacing: 15px;
 }
 
 /*Fin Style du header*/
@@ -109,6 +83,9 @@ button
     text-decoration: none;
 }
 
+#active-realise{
+    background-color: #185359;
+}
 
 #nom-projet
 {
@@ -229,11 +206,11 @@ button
 
 .colonne-intitule
 {
-    width : 40%;
+    width : 60%;
     padding-left: 15px;
 }
 
-.colonne-statut , .colonne-option , .colonne-detail
+.colonne-statut, .colonne-detail
 {
     width : 20%;
     text-align: center;
@@ -246,6 +223,7 @@ button
     color: white;
     border-radius: 5px;
     font-weight: bold;
+    border: none;
 }
 
 .detail
@@ -277,7 +255,7 @@ button
 
 .infos-tache
 {
-    width : 60%;
+    width : 75%;
 }
 
 .lignes-infos
@@ -320,10 +298,6 @@ button
     text-align: center;
 }
 
-.active
-{
-    background: #185359;
-}
 /*Fin style de section*/
 
 /*Style de footer*/
@@ -344,7 +318,7 @@ button
 /*Fin style de Footer*/
 
 @media screen and (max-width: 1200px) {
-    #click-menu, #infos-profil-icons{
+    #click-menu{
         display: block;
     }
 
@@ -365,10 +339,6 @@ button
 
     #content{
         width: 100%;
-    }
-
-    #infos-profil{
-        display: none;
     }
 
     .close
@@ -443,8 +413,12 @@ button
         padding: 5px 20px;
     }
 
-    .colonne-detail, .colonne-intitule, .colonne-option, .colonne-statut{
+    .colonne-detail, .colonne-option, .colonne-statut{
         width: 25%;
+    }
+
+    .colonne-intitule{
+        width: 45%;
     }
 }
 
@@ -454,7 +428,7 @@ button
     }
 }
 
-@media screen and (max-width: 500px){
+@media screen and (max-width: 550px){
     .fa-bars, .close{
         font-size: 1.9em;
     }
@@ -524,5 +498,9 @@ button
     #option-planning-add button{
         padding: 5px 10px;
         font-size: 1em;
+    }
+
+    #nom{
+        display: none;
     }
 }

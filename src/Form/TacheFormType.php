@@ -22,9 +22,6 @@ class TacheFormType extends AbstractType
                     'class' => 'champ' , 
                 ]
             ])
-            ->add('debut_prev' , DateType::class , [
-                'label' => false ,
-            ])
             ->add('delai' , IntegerType::class ,[
                 'label' => false,
                 'attr' => [
@@ -32,18 +29,6 @@ class TacheFormType extends AbstractType
                     'class' => 'champ' , 
                 ]
             ])
-            ->add('cout_base' , IntegerType::class , [
-                'label' => false,
-                'attr' => [
-                    'placeholder' => 'Cout prévisionnelle (Franc CFA)' ,
-                    'class' => 'champ' , 
-                ]
-            ])
-            // ->add('debut_reel')
-            // ->add('date_fin')
-            // ->add('cout_reel')
-            // ->add('est_realise')
-            // ->add('planning')
         ;
     }
 

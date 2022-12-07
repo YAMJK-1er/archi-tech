@@ -7,9 +7,12 @@ use App\Entity\Contributeur;
 use App\Entity\Depense;
 use App\Entity\Element;
 use App\Entity\Images;
+use App\Entity\Mouvement;
 use App\Entity\Observation;
+use App\Entity\Ouvrier;
 use App\Entity\Plan;
 use App\Entity\Planning;
+use App\Entity\Presence;
 use App\Entity\Projet;
 use App\Entity\Tache;
 use App\Entity\TauxExecFin;
@@ -21,8 +24,11 @@ use App\Form\EditTacheFormType;
 use App\Form\ElementFormType;
 use App\Form\ImageFormType;
 use App\Form\ImportProjetFormType;
+use App\Form\MouvementFormType;
 use App\Form\ObservationFormType;
+use App\Form\OuvrierFormType;
 use App\Form\PlanFormType;
+use App\Form\PlanningFormType;
 use App\Form\ProjetFormType;
 use App\Form\ShareProjectFormType;
 use App\Form\TacheFormType;
@@ -34,15 +40,18 @@ use App\Repository\ApprovisionnementRepository;
 use App\Repository\ContributeurRepository;
 use App\Repository\ElementRepository;
 use App\Repository\ImagesRepository;
+use App\Repository\MouvementRepository;
 use App\Repository\ObservationRepository;
 use App\Repository\PlanningRepository;
 use App\Repository\PlanRepository;
+use App\Repository\PresenceRepository;
 use App\Repository\ProjetRepository;
 use App\Repository\TacheRepository;
 use App\Repository\TauxExecFinRepository;
 use App\Repository\TauxExecPhysRepository;
 use App\Repository\UserRepository;
 use App\Security\LoginFormAuthenticator;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Dompdf\Dompdf;
@@ -71,8 +80,10 @@ class ProjetsController extends AbstractController
     private $imageRepository;
     private $contriRepository;
     private $planRepository;
+    private $mouvementRepository;
+    private $presenceRepository;
 
-    public function __construct(ProjetRepository $projetRepository , UserRepository $userRepository , EntityManagerInterface $entityManager , PlanningRepository $planningRepository , TacheRepository $tacheRepository , ApprovisionnementRepository $approvRepository , ElementRepository $elementRepository , TauxExecFinRepository $tauxexecfinRepository , TauxExecPhysRepository $tauxexecphysRepository , ObservationRepository $observationRepository , ImagesRepository $imageRepository , ContributeurRepository $contriRepository, PlanRepository $planRepository)
+    public function __construct(ProjetRepository $projetRepository , UserRepository $userRepository , EntityManagerInterface $entityManager , PlanningRepository $planningRepository , TacheRepository $tacheRepository , ApprovisionnementRepository $approvRepository , ElementRepository $elementRepository , TauxExecFinRepository $tauxexecfinRepository , TauxExecPhysRepository $tauxexecphysRepository , ObservationRepository $observationRepository , ImagesRepository $imageRepository , ContributeurRepository $contriRepository, PlanRepository $planRepository, MouvementRepository $mouvementRepository, PresenceRepository $presenceRepository)
     {
         $this->projetRepository = $projetRepository;
         $this->userRepository = $userRepository;
@@ -87,19 +98,21 @@ class ProjetsController extends AbstractController
         $this->imageRepository = $imageRepository;
         $this->contriRepository = $contriRepository;
         $this->planRepository = $planRepository;
+        $this->mouvementRepository = $mouvementRepository;
+        $this->presenceRepository = $presenceRepository;
     }
 
     #[Route('/projets', name: 'app_projets')]
     public function index(): Response
     {
-        $admin = false;
         $user = $this->getUser() ;
 
         $roles = $user->getRoles();
 
-        foreach ($roles as $role) {
-            if ($role == "ROLE_ADMIN"){
-                $admin = true;
+        foreach ($roles as $role){
+            if ($role == 'ROLE_ADMIN'){
+                return $this->redirectToRoute('Admin_Panel');
+                break;
             }
         }
         
@@ -122,7 +135,6 @@ class ProjetsController extends AbstractController
             'user' => $user,
             'projets' => $projets,
             'imports' => $importProjets,
-            'admin' => $admin,
         ]);
     }
 
@@ -138,6 +150,10 @@ class ProjetsController extends AbstractController
         $user = $this->getUser();
 
         $projet = $this->projetRepository->find($id);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
 
         $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
 
@@ -157,52 +173,6 @@ class ProjetsController extends AbstractController
         ]);
     }
 
-    #[Route('/generatepdf/projets/{id}', name: 'generatePdf')]
-    public function generatePdf($id): Response
-    {
-        $user = $this->getUser();
-        $projet = $this->projetRepository->find($id);
-        $tauxexecfin = $this->tauxexecfinRepository->findOneBy(['projet' => $projet]);
-        $tauxexecphys = $this->tauxexecphysRepository->findOneBy(['projet' => $projet]);
-
-        $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
-        $taches = $this->tacheRepository->findBy(['planning' => $planning] , ['debut_prev' => 'asc']);
-
-        $approv = $this->approvRepository->findOneBy(['projet' => $projet]);
-        $elments = $this->elementRepository->findBy(['approvisionnement' => $approv]);
-
-        $observations = $this->observationRepository->findBy(['projet' => $projet]);
-
-        $images = $this->imageRepository->findBy(['projet' => $projet] , ['projet' => 'ASC'] , 8);
-
-        $pdf = new Dompdf();
-
-        $html =  $this->render('projets/showpdf.html.twig', [
-            'projet' => $projet,
-            'approv' => $approv,
-            'elements' => $elments,
-            'planning' => $planning,
-            'taches' => $taches,
-            'execfin' => $tauxexecfin,
-            'execphys' => $tauxexecphys,
-            'observations' => $observations,
-            'images' => $images,
-            'user' => $user,
-        ]);
-
-        $pdf->setPaper('A3' , 'landscape') ;
-
-        $pdf->loadHtml($html);
-
-        $pdf->render();
-
-        $nomPdf = $projet->getNom() . '_' . date('dmY');
-        $pdf->stream($nomPdf);
-
-        return $this->redirect('/projets/'.$id.'/details');
-
-    }
-
     #[Route('/termine/projets/{id}', name:'terminate_project')]
     public function Termine(Request $request , $id): Response
     {
@@ -210,6 +180,10 @@ class ProjetsController extends AbstractController
 
         $projet = $this->projetRepository->find($id);
         $projet->setFin(new DateTimeImmutable());
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
 
         $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
 
@@ -310,6 +284,11 @@ class ProjetsController extends AbstractController
         $user = $this->getUser();
         $user = $this->userRepository->find($user->getId());
         $projet = $this->projetRepository->find($id);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
         $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
         $approv = $this->approvRepository->findOneBy(['projet' => $projet]);
         $execfin = $this->tauxexecfinRepository->findOneBy(['projet' => $projet]);
@@ -353,6 +332,11 @@ class ProjetsController extends AbstractController
     {
         $user = $this->getUser();
         $projet = $this->projetRepository->find($id);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
         $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
         $approv = $this->approvRepository->findOneBy(['projet' => $projet]);
         $execfin = $this->tauxexecfinRepository->findOneBy(['projet' => $projet]);
@@ -401,14 +385,19 @@ class ProjetsController extends AbstractController
         ]);
     }
 
-    #[Route('/projets/{idp}/approv/{ida}/addElement', name: 'addElement')]
-    public function addElement(Request $request , $idp , $ida): Response
+    #[Route('/projets/{idp}/approv/addElement', name: 'addElement')]
+    public function addElement(Request $request , $idp): Response
     {
         $element = new Element();
         $user = $this->getUser();
         $projet = $this->projetRepository->find($idp);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
         $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
-        $approv = $this->approvRepository->find($ida);
+        $approv = $projet->getApprovisionnement();
         $execfin = $this->tauxexecfinRepository->findOneBy(['projet' => $projet]);
         $execphys = $this->tauxexecphysRepository->findOneBy(['projet' => $projet]);
 
@@ -421,12 +410,12 @@ class ProjetsController extends AbstractController
             $newElement = $form->getData() ;
 
             $newElement->setApprovisionnement($approv);
-            $newElement->setQuantiteGlobale($form->get('stock_restant')->getData());
+            $newElement->setStockRestant(0);
 
             $this->entityManager->persist($newElement);
             $this->entityManager->flush();
 
-            $chemin = '/projets/'. $idp . '/details/approvisionnement/' . $ida ;
+            $chemin = '/projets/'. $idp . '/details/approvisionnement' ;
 
             return $this->redirect($chemin);
         }
@@ -442,14 +431,19 @@ class ProjetsController extends AbstractController
         ]);
     }
 
-    #[Route('/projets/{idp}/approv/{ida}/element/{ide}/edit', name: 'editElement')]
-    public function editElement(Request $request , $idp , $ida , $ide): Response
+    #[Route('/projets/{idp}/approv/element/{ide}/edit', name: 'editElement')]
+    public function editElement(Request $request , $idp , $ide): Response
     {
         $element = $this->elementRepository->find($ide);
         $user = $this->getUser();
         $projet = $this->projetRepository->find($idp);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
         $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
-        $approv = $this->approvRepository->find($ida);
+        $approv = $projet->getApprovisionnement();
         $execfin = $this->tauxexecfinRepository->findOneBy(['projet' => $projet]);
         $execphys = $this->tauxexecphysRepository->findOneBy(['projet' => $projet]);
 
@@ -463,14 +457,9 @@ class ProjetsController extends AbstractController
 
             $element->setStockRestant($new_stock);
 
-            if ($element->getStockRestant() >= $element->getQuantiteGlobale())
-            {
-                $element->setQuantiteGlobale($element->getStockRestant());
-            }
-
             $this->entityManager->flush();
 
-            $chemin = '/projets/'. $idp . '/details/approvisionnement/' . $ida ;
+            $chemin = '/projets/'. $idp . '/details/approvisionnement' ;
             return $this->redirect($chemin);
         }
 
@@ -486,19 +475,24 @@ class ProjetsController extends AbstractController
         ]);
     }
 
-    #[Route('/projets/{idp}/approv/{ida}/element/{ide}/delete', name: 'DeleteElement')]
-    public function DeleteElement(Request $request , $idp , $ida , $ide): Response
+    #[Route('/projets/{idp}/approv/element/{ide}/delete', name: 'DeleteElement')]
+    public function DeleteElement(Request $request , $idp , $ide): Response
     {
         $element = $this->elementRepository->find($ide);
         $user = $this->getUser();
         $projet = $this->projetRepository->find($idp);
-        $approv = $this->approvRepository->find($ida);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
+        $approv = $projet->getApprovisionnement();
 
         $this->entityManager->remove($element) ;
 
         $this->entityManager->flush();
 
-        $chemin = '/projets/'. $idp . '/details/approvisionnement/' . $ida ;
+        $chemin = '/projets/'. $idp . '/details/approvisionnement' ;
 
         return $this->redirect($chemin);
     }
@@ -509,6 +503,10 @@ class ProjetsController extends AbstractController
         $user = $this->getUser();
         $projet = $this->projetRepository->find($idp);
         $observ = $this->observationRepository->find($ido);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
 
         $this->entityManager->remove($observ);
 
@@ -525,6 +523,10 @@ class ProjetsController extends AbstractController
         $projet = $this->projetRepository->find($idp);
         $image = $this->imageRepository->find($ida);
 
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
         $this->entityManager->remove($image);
 
         $this->entityManager->flush();
@@ -533,13 +535,18 @@ class ProjetsController extends AbstractController
         return $this->redirect($chemin);
     }
 
-    #[Route('/projets/{idp}/planning/{ida}/addTache', name: 'addtache')]
-    public function addTache(Request $request , $idp , $ida): Response
+    #[Route('/projets/{idp}/planning/addTache', name: 'addtache')]
+    public function addTache(Request $request , $idp): Response
     {
         $tache = new Tache();
         $user = $this->getUser();
         $projet = $this->projetRepository->find($idp);
-        $planning = $this->planningRepository->find($ida);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
+        $planning = $projet->getPlanning();
         $approv = $this->approvRepository->findOneBy(['projet' => $projet]);
         $execfin = $this->tauxexecfinRepository->findOneBy(['projet' => $projet]);
         $execphys = $this->tauxexecphysRepository->findOneBy(['projet' => $projet]);
@@ -557,7 +564,7 @@ class ProjetsController extends AbstractController
             $this->entityManager->persist($newTache);
             $this->entityManager->flush();
 
-            $chemin = '/projets/'. $idp . '/details/planning/' . $ida ;
+            $chemin = '/projets/'. $idp . '/details/planning' ;
             return $this->redirect($chemin);
         }
 
@@ -572,147 +579,55 @@ class ProjetsController extends AbstractController
         ]);
     }
 
-    #[Route('/projets/{idp}/planning/{ida}/tache/{idt}/edit', name: 'editTache')]
-    public function editTache(Request $request , $idp , $ida , $idt): Response
+    #[Route('/projets/{idp}/planning/tache/{idt}/terminer', name: 'Terminer-Tache')]
+    public function terminerTache($idp , $idt): Response
     {
         $tache = $this->tacheRepository->find($idt);
-        $tache->setDebutReel(new DateTimeImmutable());
-        $tache->setDateFin(new DateTimeImmutable());
 
         $user = $this->getUser();
         $projet = $this->projetRepository->find($idp);
-        $planning = $this->planningRepository->find($ida);
-        $approv = $this->approvRepository->findOneBy(['projet' => $projet]);
-        $execfin = $this->tauxexecfinRepository->findOneBy(['projet' => $projet]);
-        $execphys = $this->tauxexecphysRepository->findOneBy(['projet' => $projet]);
 
-        $form = $this->createForm(EditTacheFormType::class , $tache);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid())
-        {
-            $tache->setDebutReel($form->get('debut_reel')->getData());
-            $tache->setDateFin($form->get('date_fin')->getData());
-
-            $debut_reel = $form->get('debut_reel')->getData();
-            $fin_reel = $form->get('date_fin')->getData();
-
-            $delai_reel = date_diff($fin_reel, $debut_reel);
-            $tache->setDelaiReel($delai_reel->days + 1);
-            $tache->setCoutReel($form->get('cout_reel')->getData());
-            $tache->setEstRealise($form->get('est_realise')->getData());
-
-            $this->entityManager->flush();
-
-            $chemin = '/projets/'. $idp . '/details/planning/' . $ida ;
-            return $this->redirect($chemin);
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
         }
+            $debut_reel = $tache->getDebutReel();
 
-        return $this->render('taches/edit.html.twig', [
-            'form' => $form->createView(),
-            'tache' => $tache,
-            'user' => $user,
-            'projet' => $projet,
-            'planning' => $planning,
-            'approv' => $approv,
-            'execfin' => $execfin,
-            'execphys' => $execphys,
-        ]);
+            if ($debut_reel){
+                $tache->setDateFin(new DateTimeImmutable());
+                $fin_reel = $tache->getDateFin();
+
+                $delai_reel = date_diff($fin_reel, $debut_reel);
+                $tache->setDelaiReel($delai_reel->days + 1);
+                $tache->setEstRealise(true);
+
+                $this->entityManager->flush();
+
+                $chemin = '/projets/'. $idp . '/details/planning/taches_realisees' ;
+                return $this->redirect($chemin);
+            }
+
+            else{
+                return $this->redirectToRoute('show_taches_a_realiser', ['id' => $idp]);
+            }    
     }
 
-    #[Route('/projets/{idp}/planning/{ida}/tache/{idt}/delete', name: 'DeleteTache')]
-    public function DeleteTache(Request $request , $idp , $ida , $idt): Response
+    #[Route('/projets/{idp}/planning/tache/{idt}/debuter', name: 'Debuter-Tache')]
+    public function debuterTache($idp , $idt): Response
     {
         $tache = $this->tacheRepository->find($idt);
+
         $user = $this->getUser();
         $projet = $this->projetRepository->find($idp);
-        $approv = $this->approvRepository->find($ida);
 
-        $this->entityManager->remove($tache) ;
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
 
+        $tache->setDebutReel(new DateTimeImmutable());
+        
         $this->entityManager->flush();
 
-        $chemin = '/projets/'. $idp . '/details/planning/' . $ida ;
-
-        return $this->redirect($chemin);
-    
-    }
-
-    #[Route('/projets/{idp}/tauxexecfin/{idtaux}/edit', name: 'editTauxExecFin')]
-    public function editTauxExecFin(Request $request , $idp , $idtaux): Response
-    {
-        $user = $this->getUser();
-        $projet = $this->projetRepository->find($idp);
-        $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
-        $approv = $this->approvRepository->findOneBy(['projet' => $projet]);
-        $execphys = $this->tauxexecfinRepository->findOneBy(['projet' => $projet]);
-        $tauxexecfin = $this->tauxexecfinRepository->find($idtaux);
-
-        $form = $this->createForm(TauxExecFinFormType::class , $tauxexecfin);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid())
-        {
-            $tauxexecfin->setDepenses($form->get('depenses')->getData());
-            $taux = $tauxexecfin->getDepenses() / $tauxexecfin->getBudget();
-            $taux = round($taux , 4);
-            $tauxexecfin->setTaux($taux);
-
-            $this->entityManager->flush();
-
-            $chemin = '/projets/'. $idp . '/details/execution_financiere/' . $idtaux;
-            return $this->redirect($chemin);
-        }
-
-        return $this->render('taux/editTauxFin.html.twig', [
-            'form' => $form->createView(),
-            'user' => $user,
-            'projet' => $projet,
-            'planning' => $planning,
-            'approv' => $approv,
-            'execfin' => $tauxexecfin,
-            'execphys' => $execphys,
-        ]);
-    }
-
-    #[Route('/projets/{idp}/tauxexecphys/{idtaux}/edit', name: 'editTauxExecPhys')]
-    public function editTauxExecPhys(Request $request , $idp , $idtaux): Response
-    {
-        $user = $this->getUser();
-        $projet = $this->projetRepository->find($idp);
-        $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
-        $approv = $this->approvRepository->findOneBy(['projet' => $projet]);
-        $execfin = $this->tauxexecfinRepository->findOneBy(['projet' => $projet]);
-        $tauxexecphys = $this->tauxexecphysRepository->find($idtaux);
-
-        $form = $this->createForm(TauxExecPhysFormType::class , $tauxexecphys);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid())
-        {
-            $tauxexecphys->setDuree($form->get('duree')->getData());
-            $taux = $tauxexecphys->getDuree() / $tauxexecphys->getDelai();
-            $taux = round($taux , 4);
-            $tauxexecphys->setTaux($taux);
-
-            $this->entityManager->flush();
-
-            $chemin = '/projets/'. $idp . '/details/execution_physique/' . $idtaux;
-            return $this->redirect($chemin);
-        }
-
-        return $this->render('taux/editTauxPhys.html.twig', [
-            'form' => $form->createView(),
-            'user' => $user ,
-            'projet' => $projet,
-            'planning' => $planning,
-            'approv' => $approv,
-            'execfin' => $execfin,
-            'execphys' => $tauxexecphys,
-        ]);
+        return $this->redirectToRoute('show_taches_a_realiser', ['id' => $idp]);
     }
 
     #[Route('/projet/import', name: 'import_project')]
@@ -763,14 +678,18 @@ class ProjetsController extends AbstractController
         ]);
     }
 
-    #[Route('/projets/{id}/details/planning/{idp}', name: 'show_planning')]
-    public function showplanning($id , $idp)
+    #[Route('/projets/{id}/details/planning', name: 'show_planning')]
+    public function showplanning(Request $request, $id)
     {
         $user = $this->getUser();
 
         $projet = $this->projetRepository->find($id);
 
-        $planning = $this->planningRepository->find($idp);
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
+        $planning = $projet->getPlanning();
         
         $taches = $this->tacheRepository->findBy(['planning' => $planning]);
 
@@ -780,6 +699,31 @@ class ProjetsController extends AbstractController
 
         $execphys = $this->tauxexecphysRepository->findOneBy(['projet' => $projet]);
 
+
+        $form = $this->createForm(PlanningFormType::class, $planning);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+            $path = $form->get('planning')->getData();
+
+            if ($path) {
+                $filename = uniqid() . '.csv'; //. $path->guessExtension();
+
+                try {
+                    $path->move($this->getParameter('kernel.project_dir'). '/public/plans' , $filename);
+                } catch (FileException $e) {
+                    return new Response($e->getMessage());
+                }
+
+                $planning->setPlanning($filename);
+
+                $this->entityManager->flush();
+                
+                return $this->redirectToRoute('Generate_Planning', ['idp' => $id]);
+            }
+        }
+
+
         return $this->render('HTML/planning_gen.html.twig', [
             'projet' => $projet,
             'user' => $user,
@@ -788,17 +732,23 @@ class ProjetsController extends AbstractController
             'approv' => $approv,
             'execfin' => $execfin,
             'execphys' => $execphys,
+
+            'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/projets/{id}/details/planning/{idp}/taches_a_realiser', name: 'show_taches_a_realiser')]
-    public function showtachesarealiser($id , $idp)
+    #[Route('/projets/{id}/details/planning/taches_a_realiser', name: 'show_taches_a_realiser')]
+    public function showtachesarealiser($id)
     {
         $user = $this->getUser();
 
         $projet = $this->projetRepository->find($id);
 
-        $planning = $this->planningRepository->find($idp);
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
+        $planning = $projet->getPlanning();
         
         $taches = $this->tacheRepository->findBy(['planning' => $planning , 'est_realise' => null]);
 
@@ -819,14 +769,18 @@ class ProjetsController extends AbstractController
         ]);
     }
 
-    #[Route('/projets/{id}/details/planning/{idp}/taches_realisees', name: 'show_taches_realisees')]
-    public function showtachesrealisees($id , $idp)
+    #[Route('/projets/{id}/details/planning/taches_realisees', name: 'show_taches_realisees')]
+    public function showtachesrealisees($id)
     {
         $user = $this->getUser();
 
         $projet = $this->projetRepository->find($id);
 
-        $planning = $this->planningRepository->find($idp);
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
+        $planning = $projet->getPlanning();
         
         $taches = $this->tacheRepository->findBy(['planning' => $planning , 'est_realise' => true]);
 
@@ -847,16 +801,20 @@ class ProjetsController extends AbstractController
         ]);
     }
 
-    #[Route('/projets/{id}/details/approvisionnement/{ida}', name: 'show_approv')]
-    public function showapprov($id , $ida)
+    #[Route('/projets/{id}/details/approvisionnement', name: 'show_approv')]
+    public function showapprov($id)
     {
         $user = $this->getUser();
 
         $projet = $this->projetRepository->find($id);
 
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
         $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
         
-        $approv = $this->approvRepository->find($ida);
+        $approv = $projet->getApprovisionnement();
 
         $elements = $this->elementRepository->findBy(['approvisionnement' => $approv]);
 
@@ -875,18 +833,22 @@ class ProjetsController extends AbstractController
         ]);
     }
 
-    #[Route('/projets/{idp}/details/execution_financiere/{idf}')]
-    public function tauxexecfin($idp , $idf)
+    #[Route('/projets/{idp}/details/execution_financiere')]
+    public function tauxexecfin($idp)
     {
         $user = $this->getUser();
 
         $projet = $this->projetRepository->find($idp);
 
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
         $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
 
         $approv = $this->approvRepository->findOneBy(['projet' => $projet]);
 
-        $execfin = $this->tauxexecfinRepository->find($idf);
+        $execfin = $projet->getTauxExecFin();
 
         $execphys = $this->tauxexecphysRepository->findOneBy(['projet' => $projet]);
 
@@ -917,12 +879,16 @@ class ProjetsController extends AbstractController
         ]);
     }
 
-    #[Route('/projets/{idp}/details/execution_physique/{idph}')]
-    public function tauxexecphys($idp , $idph)
+    #[Route('/projets/{idp}/details/execution_physique')]
+    public function tauxexecphys($idp)
     {
         $user = $this->getUser();
 
         $projet = $this->projetRepository->find($idp);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
 
         $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
 
@@ -930,7 +896,7 @@ class ProjetsController extends AbstractController
 
         $execfin = $this->tauxexecfinRepository->findOneBy(['projet' => $projet]);
 
-        $execphys = $this->tauxexecphysRepository->find($idph);
+        $execphys = $projet->getTauxExecPhys();
 
         if (!$projet->getEstTermine()){
             $today = date_create();
@@ -981,6 +947,10 @@ class ProjetsController extends AbstractController
 
         $projet = $this->projetRepository->find($idp);
 
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
         $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
 
         $approv = $this->approvRepository->findOneBy(['projet' => $projet]);
@@ -1009,6 +979,10 @@ class ProjetsController extends AbstractController
 
         $projet = $this->projetRepository->find($idp);
 
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
         $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
 
         $approv = $this->approvRepository->findOneBy(['projet' => $projet]);
@@ -1035,6 +1009,10 @@ class ProjetsController extends AbstractController
         $user = $this->getUser();
 
         $project = $this->projetRepository->find($idp);
+
+        if ($user->getEmail() != $project->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
 
         $form = $this->createForm(ShareProjectFormType::class, $project);
         $form->handleRequest($request);
@@ -1083,6 +1061,10 @@ class ProjetsController extends AbstractController
 
         $projet = $this->projetRepository->find($idp);
 
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
         $depenses = $projet->getDepenses();
 
         $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
@@ -1109,6 +1091,10 @@ class ProjetsController extends AbstractController
         $user = $this->getUser();
 
         $projet = $this->projetRepository->find($idp);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
 
         $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
 
@@ -1169,6 +1155,10 @@ class ProjetsController extends AbstractController
 
         $projet = $this->projetRepository->find($idp);
 
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
         $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
 
         $approv = $this->approvRepository->findOneBy(['projet' => $projet]);
@@ -1195,6 +1185,11 @@ class ProjetsController extends AbstractController
     {
         $user = $this->getUser();
         $projet = $this->projetRepository->find($id);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
         $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
         $approv = $this->approvRepository->findOneBy(['projet' => $projet]);
         $execfin = $this->tauxexecfinRepository->findOneBy(['projet' => $projet]);
@@ -1245,7 +1240,13 @@ class ProjetsController extends AbstractController
     #[Route('/projets/{idp}/plans/{idpl}/delete', name: 'DeletePlans')]
     public function DeletePlan($idp , $idpl): Response
     {
+        $user = $this->getUser();
         $projet = $this->projetRepository->find($idp);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
         $plan = $this->planRepository->find($idpl);
 
         $projet->removePlan($plan);
@@ -1254,5 +1255,363 @@ class ProjetsController extends AbstractController
 
         $chemin = '/projets/'. $idp . '/details/plans';
         return $this->redirect($chemin);
+    }
+
+    #[Route('/projets/{idp}/details/planning/generate', name:'Generate_Planning')]
+    public function generatePlanning(Request $request, $idp)
+    {
+        $user = $this->getUser();
+        $projet = $this->projetRepository->find($idp);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
+        $planning = $projet->getPlanning();
+
+        $path = $this->getParameter('kernel.project_dir') .'/public/plans/planning.csv'; //. $planning->getPlanning();
+
+        $file = fopen($path, 'r');
+
+        if ($file !== FALSE){
+            $i = 0;
+            while($data = fgetcsv($file, 1000, ';')){
+                if ($data[0] != "" && $data[1] != "" && $data[4] != ""){
+                    $array[] = $data;
+                }
+            }
+
+            foreach($array as $data){
+                if ($i == 0){
+                    $i++;
+                    continue;
+                }
+
+                $tache = new Tache();
+
+                $tache->setIntitule($data[1]);
+                if (intval($data[4]) == 0){
+                    continue;
+                }
+                else{
+                    $tache->setDelai(intval($data[4]));
+                }
+
+                $this->entityManager->persist($tache);
+
+                $planning->addTach($tache);
+
+                $this->entityManager->flush();
+            }
+
+            fclose($file);
+
+            return $this->redirectToRoute('show_planning', ['id' => $idp]);
+        }
+
+        else{
+            return $this->redirectToRoute('show_planning', ['id' => $idp,]);
+        }
+    }
+
+    #[Route('/adminpannel', name:'Admin_Panel')]
+    public function adminPannel(){
+        $user = $this->getUser();
+
+        $users = $this->userRepository->findAll();
+
+        array_shift($users);
+
+        return $this->render('HTML/adminpannel.html.twig', [
+            'users' => $users,
+            'user' => $user,
+        ]);
+    }
+
+    #[Route('/profil', name:'User-Profil')]
+    public function profil(){
+        $user = $this->getUser();
+
+        return $this->render('HTML/profil.html.twig', [
+            'user' => $user,
+        ]);
+    }
+
+    #[Route('/user/{id}/profil', name:'User-Profil-Admin')]
+    public function userprofil($id){
+        $user = $this->userRepository->find($id);
+
+        return $this->render('HTML/user.html.twig', [
+            'user' => $user,
+        ]);
+    }
+
+    #[Route('/projets/{id}/details/approvisionnement/element/{ide}/mouvement', name:'Mouvement')]
+    public function mouvement($id, $ide){
+        $user = $this->getUser();
+
+        $projet = $this->projetRepository->find($id);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
+        $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
+        
+        $approv = $projet->getApprovisionnement();
+
+        $element = $this->elementRepository->find($ide);
+
+        $mouvements = $element->getMouvements();
+
+        $execfin = $this->tauxexecfinRepository->findOneBy(['projet' => $projet]);
+
+        $execphys = $this->tauxexecphysRepository->findOneBy(['projet' => $projet]);
+
+        $totalapprov = 0;
+        $totalconso = 0;
+
+        foreach ($mouvements as $mouv){
+            if ($mouv->getType() == 'Approvisionnement'){
+                $totalapprov += $mouv->getQuantite();
+            }
+
+            if ($mouv->getType() == 'Consommation'){
+                $totalconso += $mouv->getQuantite();
+            }
+        }
+
+        return $this->render('HTML/mouvement.html.twig', [
+            'projet' => $projet,
+            'user' => $user,
+            'planning' => $planning,
+            'approv' => $approv,
+            'element' => $element,
+            'execfin' => $execfin,
+            'execphys' => $execphys,
+            'mouvements' => $mouvements,
+            'totalapprov' => $totalapprov,
+            'totalconso' => $totalconso,
+        ]);
+    }
+
+    #[Route('/projets/{id}/details/approvisionnement/element/{ide}/addmouvement', name:'Add-Mouvement')]
+    public function addmouvement(Request $request, $id, $ide){
+        $user = $this->getUser();
+
+        $projet = $this->projetRepository->find($id);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
+        $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
+        
+        $approv = $projet->getApprovisionnement();
+
+        $element = $this->elementRepository->find($ide);
+
+        $execfin = $this->tauxexecfinRepository->findOneBy(['projet' => $projet]);
+
+        $execphys = $this->tauxexecphysRepository->findOneBy(['projet' => $projet]);
+
+        $error = null;
+
+        $mouvement = new Mouvement();
+        $mouvement->setDate(new DateTimeImmutable());
+
+        $form = $this->createForm(MouvementFormType::class, $mouvement);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+            if ($form->get('type')->getData() == 'Consommation' && $form->get('quantite')->getData() > $element->getStockRestant()){
+                $error = 'Impossible d\'enregistrer ce mouvement.';
+            }
+
+            else{
+                $mouvement = $form->getData();
+
+                if ($form->get('type')->getData() == 'Approvisionnement'){
+                    $stock = $element->getStockRestant();
+                    $stock += $form->get('quantite')->getData();
+                    $element->setStockRestant($stock);
+                }
+
+                if ($form->get('type')->getData() == 'Consommation'){
+                    $stock = $element->getStockRestant();
+                    $stock -= $form->get('quantite')->getData();
+                    $element->setStockRestant($stock);
+                }
+
+                $element->addMouvement($mouvement);
+
+                $this->entityManager->persist($mouvement);
+                $this->entityManager->flush();
+
+                return $this->redirectToRoute('Mouvement', ['id' => $id, 'ide' => $ide]);
+            }
+        }
+
+        return $this->render('mouvement/create.html.twig', [
+            'projet' => $projet,
+            'user' => $user,
+            'planning' => $planning,
+            'approv' => $approv,
+            'element' => $element,
+            'execfin' => $execfin,
+            'execphys' => $execphys,
+            'form' => $form->createView(),
+            'error' => $error,
+        ]);
+    }
+
+    #[Route('/projets/{id}/details/presence', name:'Presence')]
+    public function presence($id){
+        $user = $this->getUser();
+
+        $projet = $this->projetRepository->find($id);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
+        $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
+        
+        $approv = $projet->getApprovisionnement();
+
+        $execfin = $this->tauxexecfinRepository->findOneBy(['projet' => $projet]);
+
+        $execphys = $this->tauxexecphysRepository->findOneBy(['projet' => $projet]);
+
+        $liste = $projet->getPresences();
+
+        return $this->render('HTML/presence.html.twig', [
+            'projet' => $projet,
+            'user' => $user,
+            'planning' => $planning,
+            'approv' => $approv,
+            'execfin' => $execfin,
+            'execphys' => $execphys,
+            'liste' => $liste,
+        ]);
+    }
+
+    #[Route('/projets/{id}/details/presence/generate', name:'Generate-Presence')]
+    public function generatePresence($id){
+        $user = $this->getUser();
+
+        $projet = $this->projetRepository->find($id);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
+        $today = new DateTime('now');
+
+        $liste = $projet->getPresences();
+
+        foreach($liste as $pres){
+            if ($today->format('d/m/Y') == $pres->getDate()->format('d/m/Y')){
+                return $this->redirectToRoute('Presence-Ouvriers', ['id' => $id, 'idp' => $pres->getId()]);
+            }
+
+            else{
+                continue;
+            }
+        }
+
+        $presence = new Presence();
+        $presence->setDate($today);
+
+        $projet->addPresence($presence);
+
+        $this->entityManager->persist($presence);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('Presence-Ouvriers', ['id' => $id, 'idp' => $presence->getId()]);
+    }
+
+    #[Route('/projets/{id}/details/presence/{idp}', name:'Presence-Ouvriers')]
+    public function listepresence($id, $idp){
+        $user = $this->getUser();
+
+        $projet = $this->projetRepository->find($id);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
+        $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
+        
+        $approv = $projet->getApprovisionnement();
+
+        $execfin = $this->tauxexecfinRepository->findOneBy(['projet' => $projet]);
+
+        $execphys = $this->tauxexecphysRepository->findOneBy(['projet' => $projet]);
+
+        $liste = $this->presenceRepository->find($idp);
+
+        $ouvriers = $liste->getOuvriers();
+
+        return $this->render('HTML/ouvriers.html.twig', [
+            'projet' => $projet,
+            'user' => $user,
+            'planning' => $planning,
+            'approv' => $approv,
+            'execfin' => $execfin,
+            'execphys' => $execphys,
+            'liste' => $liste,
+            'ouvriers' => $ouvriers,
+        ]);
+    }
+
+    #[Route('/projets/{id}/details/presence/{idp}/ajouter', name:'Presence-Ajouter-Ouvriers')]
+    public function addOuvrier(Request $request, $id, $idp){
+        $user = $this->getUser();
+
+        $projet = $this->projetRepository->find($id);
+
+        if ($user->getEmail() != $projet->getUser()->getEmail()){
+            return $this->redirectToRoute('app_projets');
+        }
+
+        $planning = $this->planningRepository->findOneBy(['projet' => $projet]);
+        
+        $approv = $projet->getApprovisionnement();
+
+        $execfin = $this->tauxexecfinRepository->findOneBy(['projet' => $projet]);
+
+        $execphys = $this->tauxexecphysRepository->findOneBy(['projet' => $projet]);
+
+        $liste = $this->presenceRepository->find($idp);
+
+        $ouvrier = new Ouvrier();
+
+        $form = $this->createForm(OuvrierFormType::class, $ouvrier);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+            $ouvrier = $form->getData();
+
+            $liste->addOuvrier($ouvrier);
+
+            $this->entityManager->persist($ouvrier);
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('Presence-Ajouter-Ouvriers', ['id' => $id, 'idp' => $idp]);
+        }
+
+        return $this->render('ouvrier/create.html.twig', [
+            'projet' => $projet,
+            'user' => $user,
+            'planning' => $planning,
+            'approv' => $approv,
+            'execfin' => $execfin,
+            'execphys' => $execphys,
+            'liste' => $liste,
+            'form' => $form->createView(),
+        ]);
     }
 }

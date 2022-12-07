@@ -22,6 +22,9 @@ class Planning
     #[ORM\OneToMany(mappedBy: 'planning', targetEntity: Tache::class)]
     private $taches;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $planning;
+
     public function __construct()
     {
         $this->taches = new ArrayCollection();
@@ -77,5 +80,17 @@ class Planning
     public function __toString()
     {
         return 'Planning N°' . $this->getId();
+    }
+
+    public function getPlanning(): ?string
+    {
+        return $this->planning;
+    }
+
+    public function setPlanning(?string $planning): self
+    {
+        $this->planning = $planning;
+
+        return $this;
     }
 }

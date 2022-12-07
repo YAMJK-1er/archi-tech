@@ -10,6 +10,7 @@
 button
 {
     cursor: pointer;
+    border: none;
 }
 
 content
@@ -34,13 +35,6 @@ content
     color : white;
 }
 
-#infos-profil
-{
-    width: 40%;
-    display: flex;
-    justify-content: space-between;
-}
-
 #logo
 {
     text-transform: uppercase;
@@ -49,38 +43,20 @@ content
     letter-spacing: 5px;
 }
 
-.info button
+#infos-profil-icons
 {
-    padding: 3px 15px;
-    border-radius: 5px;
-    background: #185359;
-    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 0 0 15px 15px;
+}
+
+#infos-profil-icons i{
+    letter-spacing: 15px;
 }
 
 #click-menu{
     display: none;
-}
-
-#infos-profil-icons
-{
-    position: relative;
-}
-
-#block-info-responsive{
-    position: absolute; 
-    z-index: 2;
-    top : 35px;
-    left: -195px;
-    width : 250px;
-    height: 0vh;
-    background-color: #ed8715;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    overflow: hidden;
-    transition : 0.5s;
-    border-radius: 0 0 15px 15px;
 }
 
 /*Fin Style du header*/
@@ -107,6 +83,10 @@ content
 {
     color : white ;
     text-decoration: none;
+}
+
+#active-details{
+    background-color: #185359;
 }
 
 #nom-projet
@@ -247,11 +227,6 @@ form button
     text-decoration: none;
 }
 
-#active
-{
-    background-color: #185359;
-}
-
 /*Fin style de section*/
 
 /*Style de footer*/
@@ -272,7 +247,7 @@ form button
 /*Fin style de Footer*/
 
 @media screen and (max-width: 1200px) {
-    #click-menu, #infos-profil-icons{
+    #click-menu{
         display: block;
     }
 
@@ -293,10 +268,6 @@ form button
 
     #content{
         width: 100%;
-    }
-
-    #infos-profil{
-        display: none;
     }
 
     .fa-plus
@@ -387,5 +358,9 @@ form button
         width : 60px ;
         font-size : 1em;
         margin-left: 15px ;
+    }
+
+    #nom{
+        display: none;
     }
 }

@@ -20,20 +20,12 @@ class ElementFormType extends AbstractType
                     'placeholder' => 'Nom de l\'élement' ,
                 ]
             ])
-            ->add('stock_restant' , IntegerType::class , [
-                'label' => false ,
-                'attr' => [
-                    'placeholder' => 'Quantité'
-                ]
-            ])
-            // ->add('quantite_globale')
             ->add('UniteOeuvre' , TextType::class , [
                 'label' => false,
                 'attr' => [
                     'placeholder' => 'Unité d\'oeuvre' ,
                 ]
             ])
-            // ->add('approvisionnement')
         ;
     }
 

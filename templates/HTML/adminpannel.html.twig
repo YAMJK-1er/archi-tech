@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/CSS/adminpannel.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/CSS/fontawesome/css/all.min.css') }}">
+    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+    <title>Panneau d'administration</title>
+</head>
+<body>
+    <div id="bloc-page">
+        <div id="header">
+            <div id="logo">
+                Archi - Tech
+            </div>
+
+        </div>
+
+        <div id="section">
+            <div id="titre">
+                Panneau d'administration
+            </div>
+
+            <hr id="hr-section-titre">
+
+            <div id="bande"></div>
+            
+            <div id="panneau">
+                <div id="option-add">
+                    <a href="/adminregister"><button><i class="fa fa-plus"></i> Ajouter un compte</button></a>
+                    <a href="/logout"><button><i class="fa fa-sign-out-alt"></i> Se déconnecter</button></a>
+                </div>
+
+                {% if users|length == 0 %}
+                        Vous n'avez pas encore ajouter de compte.
+
+                    {% else %}
+                        <div id="entete">
+                            <div class="nom">Nom & Prénom</div>
+
+                            <div class="poste">Poste</div>
+                        </div>
+
+                        {% for account in users %}
+                            <a href="user/{{account.id}}/profil" style='text-decoration:none'>
+                                <div class="lignes">
+                                    <div class="nom">{{account.nom}} {{account.prenom}}</div>
+
+                                    <div class="poste">{{account.poste}}</div>
+                                </div>
+                            </a>
+
+                            <hr>
+                        {% endfor %}
+                {% endif %}
+                
+            </div>
+
+            <div id="footer"><p><i class="fa fa-copyright"></i> Tout droits réservés , Oracle Logic Consulting SARL 2022</p></div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -34,13 +34,6 @@ button
     color : white;
 }
 
-#infos-profil
-{
-    width: 40%;
-    display: flex;
-    justify-content: space-between;
-}
-
 #logo
 {
     text-transform: uppercase;
@@ -49,38 +42,20 @@ button
     letter-spacing: 5px;
 }
 
-.info-responsive button
-{
-    padding: 3px 15px;
-    border-radius: 5px;
-    background: #185359;
-    color: white;
-}
-
 #click-menu{
     display: none;
 }
 
 #infos-profil-icons
 {
-    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 0 0 15px 15px;
 }
 
-#block-info-responsive{
-    position: absolute;
-    z-index: 2;
-    top : 35px;
-    left: -195px;
-    width : 250px;
-    height: 0vh;
-    background-color: #ed8715;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    overflow: hidden;
-    transition : 0.5s;
-    border-radius: 0 0 15px 15px;
+#infos-profil-icons i{
+    letter-spacing: 15px;
 }
 
 /*Fin Style du header*/
@@ -107,6 +82,10 @@ button
 {
     color : white ;
     text-decoration: none;
+}
+
+.active-planning{
+    background-color: #185359;
 }
 
 #nom-projet
@@ -176,6 +155,32 @@ button
 {
     width : 100%;
     padding : 2.5vh 0 5vh 0 ;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#option-planning-add form{
+    width: 47.5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#option-planning-add form input[type='file']
+{
+    padding: 10px;
+    font-size: 1.1em;
+}
+
+#option-planning-add form input[type='submit']
+{
+    padding: 5px 25px;
+    font-size: 1em;
+    border-radius: 5px;
+    border: none;
+    background: #185359;
+    color :white ;
 }
 
 #option-planning-add button
@@ -185,6 +190,7 @@ button
     color :white ;
     background: #185359;
     border-radius: 5px;
+    border: none;
 }
 
 #zero
@@ -228,11 +234,11 @@ button
 
 .colonne-intitule
 {
-    width : 40%;
+    width : 60%;
     padding-left: 15px;
 }
 
-.colonne-statut , .colonne-option , .colonne-detail
+.colonne-statut , .colonne-detail
 {
     width : 20%;
     text-align: center;
@@ -245,6 +251,7 @@ button
     color: white;
     border-radius: 5px;
     font-weight: bold;
+    border: none;
 }
 
 .detail
@@ -298,12 +305,13 @@ button
     padding: 1vh 0 ;
 }
 
-.option-modifier button
+.info button 
 {
     padding : 5px 25px ;
     border-radius: 5px ;
     background: #185359;
     color : white;
+    border: none;
 }
 
 .libelle
@@ -319,10 +327,6 @@ button
     text-align: center;
 }
 
-.active
-{
-    background: #185359;
-}
 /*Fin style de section*/
 
 /*Style de footer*/
@@ -343,7 +347,7 @@ button
 /*Fin style de Footer*/
 
 @media screen and (max-width: 1200px) {
-    #click-menu, #infos-profil-icons{
+    #click-menu{
         display: block;
     }
 
@@ -364,10 +368,6 @@ button
 
     #content{
         width: 100%;
-    }
-
-    #infos-profil{
-        display: none;
     }
 
     .close
@@ -425,6 +425,10 @@ button
     #footer{
         width: 80%;
     }
+
+    #option-planning-add{
+        display: block;
+    }
 }
 
 @media screen and (max-width: 800px){
@@ -442,8 +446,12 @@ button
         padding: 5px 20px;
     }
 
-    .colonne-detail, .colonne-intitule, .colonne-option, .colonne-statut{
+    .colonne-detail, .colonne-statut{
         width: 25%;
+    }
+
+    .colonne-intitule{
+        width: 45%;
     }
 }
 
@@ -453,7 +461,7 @@ button
     }
 }
 
-@media screen and (max-width: 500px){
+@media screen and (max-width: 550px){
     .fa-bars, .close{
         font-size: 1.9em;
     }
@@ -523,5 +531,35 @@ button
     #option-planning-add button{
         padding: 5px 10px;
         font-size: 1em;
+    }
+
+    #nom{
+        display: none;
+    }
+
+    #option-planning-add form input[type='file']
+    {
+        padding: 10px;
+        font-size: 0.75em;
+    }
+
+    #option-planning-add form input[type='submit']
+    {
+        padding: 5px 15px;
+        font-size: 0.75em;
+        border-radius: 5px;
+        border: none;
+        background: #185359;
+        color :white ;
+    }
+
+    #option-planning-add button
+    {
+        padding: 5px 15px ;
+        font-size: 0.75em;
+        color :white ;
+        background: #185359;
+        border-radius: 5px;
+        border: none;
     }
 }

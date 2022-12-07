@@ -10,6 +10,7 @@
 button
 {
     cursor: pointer;
+    border: none;
 }
 
 body
@@ -34,12 +35,15 @@ body
     color : white;
 }
 
-#infos-profil
+#infos-profil-icons
 {
-    width: 40%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+#infos-profil-icons i{
+    letter-spacing: 15px;
 }
 
 #logo
@@ -48,36 +52,6 @@ body
     font-weight: bolder ;
     font-size: 1.25em;
     letter-spacing: 5px;
-}
-
-.info button
-{
-    padding: 3px 20px;
-    border-radius: 5px;
-    background: #185359;
-    color: white;
-}
-
-#infos-profil-icons
-{
-    position: relative;
-}
-
-#block-info-responsive{
-    position: absolute;
-    z-index: 2;
-    top : 35px;
-    left: -195px;
-    width : 250px;
-    height: 0vh;
-    background-color: #ed8715;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    overflow: hidden;
-    transition : 0.5s;
-    border-radius: 0 0 15px 15px;
 }
 
 #icons{
@@ -309,7 +283,7 @@ body
     }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 550px) {
     #footer{
         font-size: 0.65em;
     }
@@ -323,8 +297,7 @@ body
         font-size: 0.70em;
     }
 
-    #block-info-responsive
-    {
-        width: 230px;
+    #nom{
+        display: none;
     }
 }

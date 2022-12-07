@@ -65,6 +65,9 @@ class Projet
     #[ORM\OneToMany(mappedBy: 'projet', targetEntity: Plan::class)]
     private $plans;
 
+    #[ORM\OneToMany(mappedBy: 'projet', targetEntity: Presence::class)]
+    private $presences;
+
     public function __construct()
     {
         $this->observations = new ArrayCollection();
@@ -72,7 +75,8 @@ class Projet
         $this->depenses = new ArrayCollection();
         $this->demarrage = new DateTimeImmutable();
         $this->plans = new ArrayCollection();
-        $this->demarrage = new DateTimeImmutable();       
+        $this->demarrage = new DateTimeImmutable();
+        $this->presences = new ArrayCollection();       
     }
 
     public function getId(): ?int
@@ -363,6 +367,36 @@ class Projet
             // set the owning side to null (unless already changed)
             if ($plan->getProjet() === $this) {
                 $plan->setProjet(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Presence>
+     */
+    public function getPresences(): Collection
+    {
+        return $this->presences;
+    }
+
+    public function addPresence(Presence $presence): self
+    {
+        if (!$this->presences->contains($presence)) {
+            $this->presences[] = $presence;
+            $presence->setProjet($this);
+        }
+
+        return $this;
+    }
+
+    public function removePresence(Presence $presence): self
+    {
+        if ($this->presences->removeElement($presence)) {
+            // set the owning side to null (unless already changed)
+            if ($presence->getProjet() === $this) {
+                $presence->setProjet(null);
             }
         }
 

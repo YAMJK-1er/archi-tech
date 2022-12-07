@@ -10,6 +10,7 @@
 button
 {
     cursor: pointer;
+    border: none;
 }
 
 body
@@ -34,13 +35,6 @@ body
     color : white;
 }
 
-#infos-profil
-{
-    width: 40%;
-    display: flex;
-    justify-content: space-between;
-}
-
 #logo
 {
     text-transform: uppercase;
@@ -49,34 +43,16 @@ body
     letter-spacing: 5px;
 }
 
-.info button
-{
-    padding: 3px 20px;
-    border-radius: 5px;
-    background: #185359;
-    color: white;
-}
-
 #infos-profil-icons
 {
-    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 0 0 15px 15px;
 }
 
-#block-info-responsive{
-    position: absolute; 
-    z-index: 2;
-    top : 35px;
-    left: -195px;
-    width : 250px;
-    height: 0vh;
-    background-color: #ed8715;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    overflow: hidden;
-    transition : 0.5s;
-    border-radius: 0 0 15px 15px;
+#infos-profil-icons i{
+    letter-spacing: 15px;
 }
 
 /*Fin Style du header*/
@@ -257,8 +233,7 @@ a
         font-size: 0.9em;
     }
 
-    #block-info-responsive
-    {
-        width: 230px;
+    #nom{
+        display: none;
     }
 }

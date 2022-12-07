@@ -66,7 +66,7 @@ class RegistrationControllerAdmin extends AbstractController
 
                 $mailer->send($email);
 
-                return $this->redirectToRoute('app_projets');
+                return $this->redirectToRoute('Admin_Panel');
             }            
         }
 

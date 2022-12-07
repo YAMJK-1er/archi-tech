@@ -18,14 +18,12 @@
             Archi - Tech
         </div>
 
-        <div id="infos-profil-icons">
-            <i class="fa fa-user-circle fa-2x" id="icons"></i>
-            <div id="block-info-responsive">
-                <div class="info"><i class="fa fa-user"></i> {{ user.prenom }} {{ user.nom }} </div>
-                <div class="info"><i class="fa fa-user-tie"></i> {{ user.poste }}</div>
-                <div class="info"><a href="/logout"><button><i class="fa fa-sign-out-alt"></i> Deconnexion</button></a></div>
+        <a href="/profil" style="text-decoration:none;color:white;">
+            <div id="infos-profil-icons">
+                <i class="fa fa-user-circle fa-2x" id="icons"></i>
+                <span id="nom">({{user.prenom}} {{user.nom}})</span>
             </div>
-        </div>
+        </a>
     </div>
 
     <div id="section">

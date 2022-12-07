@@ -17,23 +17,14 @@ class Tache
     #[ORM\Column(type: 'string', length: 255)]
     private $intitule;
 
-    #[ORM\Column(type: 'datetime')]
-    private $debut_prev;
-
     #[ORM\Column(type: 'integer')]
     private $delai;
-
-    #[ORM\Column(type: 'bigint')]
-    private $cout_base;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $debut_reel;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $date_fin;
-
-    #[ORM\Column(type: 'bigint', nullable: true)]
-    private $cout_reel;
 
     #[ORM\Column(type: 'boolean', nullable: true , options:['default' => false])]
     private $est_realise;
@@ -67,18 +58,6 @@ class Tache
         return $this;
     }
 
-    public function getDebutPrev(): ?\DateTimeInterface
-    {
-        return $this->debut_prev;
-    }
-
-    public function setDebutPrev(\DateTimeInterface $debut_prev): self
-    {
-        $this->debut_prev = $debut_prev;
-
-        return $this;
-    }
-
     public function getDelai(): ?int
     {
         return $this->delai;
@@ -87,18 +66,6 @@ class Tache
     public function setDelai(int $delai): self
     {
         $this->delai = $delai;
-
-        return $this;
-    }
-
-    public function getCoutBase(): ?string
-    {
-        return $this->cout_base;
-    }
-
-    public function setCoutBase(string $cout_base): self
-    {
-        $this->cout_base = $cout_base;
 
         return $this;
     }
@@ -123,18 +90,6 @@ class Tache
     public function setDateFin(?\DateTimeInterface $date_fin): self
     {
         $this->date_fin = $date_fin;
-
-        return $this;
-    }
-
-    public function getCoutReel(): ?string
-    {
-        return $this->cout_reel;
-    }
-
-    public function setCoutReel(?string $cout_reel): self
-    {
-        $this->cout_reel = $cout_reel;
 
         return $this;
     }

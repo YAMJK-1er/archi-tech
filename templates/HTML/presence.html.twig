@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{asset('css/CSS/presence.css')}}">
+    <link rel="stylesheet" href="{{asset('css/CSS/fontawesome/css/all.min.css')}}">
+    <title>{{ projet.nom }} - Présence</title>
+</head>
+<body>
+    <div id="bloc-page">
+        <div id="header">
+            <div id="click-menu">
+                <i class="fa fa-bars close"></i>
+            </div>
+
+            <div id="logo">
+                Archi - Tech
+            </div>
+
+            <a href="/profil" style="text-decoration:none;color:white;">
+            <div id="infos-profil-icons">
+                <i class="fa fa-user-circle fa-2x" id="icons"></i>
+                <span id="nom">({{user.prenom}} {{user.nom}})</span>
+            </div>
+        </a>
+        </div>
+
+        <div id="section">
+            <div id="side-menu">
+                {% include "sidemenu.html.twig" %}
+            </div>
+
+            <div id="content">
+                <div id="titre">
+                    Liste de présence
+                </div>
+
+                <hr id="hr-content-titre">
+
+                <div id="bande"></div>
+
+                <div id="approv">
+                    {% if user.poste != 'Client' and projet.estTermine == false %}
+                        <div id="option-element-add">
+                            <a href="/projets/{{projet.id}}/details/presence/generate"><button><i class="fa fa-plus"></i> Générer une liste de présence</button></a>
+                        </div>   
+                    {% endif %}
+                    
+
+                    {% if liste|length == 0 %}
+                        <p id='zero'>Vous n'avez pas encore généré de liste de présence</p>
+                    {% else %}
+                        <div id="entete">
+                            <div class="date">Date</div>
+                            <div class="nbre">Nombre de présence</div>
+                            <div class="detail">Option</div>
+                        </div> 
+
+                        {% for pres in liste %}
+                            <div class="lignes">
+                                <div class="date">{{pres.date|date('d/m/Y')}}</div>
+                                <div class="nbre">{{pres.ouvriers|length}}</div>
+                                <div class="detail"><a href="/projets/{{projet.id}}/details/presence/{{pres.id}}"><button>Détails</button></a></div>
+                            </div>
+
+                            <hr class="hr-element-approv">                            
+                        {% endfor %}                        
+                    {% endif %} 
+                </div>  
+
+                <div id="footer"><p><i class="fa fa-copyright"></i> Tout droits réservés , Oracle Logic Consulting SARL 2022</p></div>
+
+            </div>
+        </div>
+    </div>
+    
+
+    <script src="{{asset('js/jquery-3.6.0.min.js')}}"></script>
+    <script src="{{asset('js/details_projet.js')}}"></script>
+
+    <script>
+        $("#click-menu").click(function(){
+            let visible = $("#side-menu").hasClass('visible');
+
+            if(visible){
+                $("#click-menu i").removeClass('fa-plus');
+                $("#click-menu i").addClass('fa-bars');
+                $("#side-menu").css('left', '-100%');
+                $("#side-menu").removeClass('visible');
+            }
+            else{
+                $("#click-menu i").removeClass('fa-bars');
+                $("#click-menu i").addClass('fa-plus');
+                $("#side-menu").css('left', '0');
+                $("#side-menu").addClass('visible');
+            }
+        });
+    </script>
+</body>
+</html>

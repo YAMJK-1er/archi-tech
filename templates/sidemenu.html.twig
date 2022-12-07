@@ -1,0 +1,61 @@
+<div id="nom-projet">
+    {{ projet.nom }}
+</div>
+
+<hr class="hr-side-menu">
+
+<div id="options-details">
+    <a href="/projets/{{projet.id}}/details"><div class="option" id="active-details"><i class="fa fa-info-circle"></i> Informations <i class="fa fa-angle-right fleche"></i></div></a>
+
+    <hr class="hr-side-menu">
+
+    <a href="/projets/{{projet.id}}/details/planning"><div class="option active-planning" id="planning"><i class="fa fa-calendar-alt"></i> Planning des tâches <i class="fa fa-angle-right fleche"></i></div></a>
+
+    <hr class="hr-side-menu">
+
+    <div id="planning-sub-menu">
+        <a href="/projets/{{projet.id}}/details/planning/taches_a_realiser"><div class="option"  id="active-a-realise"><i class="fa fa-calendar-alt"></i> Tâches à réaliser <i class="fa fa-angle-right fleche"></i></div></a>
+
+        <hr class="hr-side-menu">
+
+        <a href="/projets/{{projet.id}}/details/planning/taches_realisees"><div class="option"  id="active-realise"><i class="fa fa-calendar-alt"></i> Tâches déjà réalisées <i class="fa fa-angle-right fleche"></i></div></a>
+
+        <hr class="hr-side-menu">
+    </div>
+
+    <a href="/projets/{{projet.id}}/details/presence"><div class="option" id="active-pres"><i class="fa fa-users"></i> Liste de présence <i class="fa fa-angle-right fleche"></i></div></a>
+
+    <hr class="hr-side-menu">
+    
+    <a href="/projets/{{projet.id}}/details/approvisionnement"><div class="option" id="active-approv"><i class="fa fa-briefcase"></i> Approvisionnement <i class="fa fa-angle-right fleche"></i></div></a>
+
+    <hr class="hr-side-menu">
+
+    <a href="/projets/{{projet.id}}/details/depenses"><div class="option" id="active-depense"><i class="fas fa-money-bill-wave-alt"></i> Dépenses <i class="fa fa-angle-right fleche"></i></div></a>
+
+    <hr class="hr-side-menu">
+
+    <a href="/projets/{{projet.id}}/details/execution_financiere"><div class="option"  id="active-fin"><i class="fa fa-edit"></i> Exécution financière <i class="fa fa-angle-right fleche"></i></div></a>
+
+    <hr class="hr-side-menu">
+
+    <a href="/projets/{{projet.id}}/details/execution_physique"><div class="option"  id="active-phys"><i class="fa fa-edit"></i> Exécution physique <i class="fa fa-angle-right fleche"></i></div></a>
+
+    <hr class="hr-side-menu">
+
+    <a href="/projets/{{projet.id}}/details/observations"><div class="option"  id="active-observ"><i class="fa fa-eye"></i> Observations <i class="fa fa-angle-right fleche"></i></div></a>
+
+    <hr class="hr-side-menu">
+
+    <a href="/projets/{{projet.id}}/details/images"><div class="option"  id="active-image"><i class="fa fa-file-image"></i> Images <i class="fa fa-angle-right fleche"></i></div></a>
+
+    <hr class="hr-side-menu">
+
+    <a href="/projets/{{projet.id}}/details/plans"><div class="option"  id="active-plan"><i class="fas fa-file-alt"></i> Bibliothèque <i class="fa fa-angle-right fleche"></i></div></a>
+
+    <hr class="hr-side-menu">
+
+    <a href="/projets"><div class="option"><i class="fa fa-building"></i> Liste de vos projets <i class="fa fa-angle-right fleche"></i></div></a>
+
+    <hr class="hr-side-menu">
+</div>

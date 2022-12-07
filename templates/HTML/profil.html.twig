@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ asset('css/CSS/profil.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/CSS/fontawesome/css/all.min.css') }}">
+    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+    <title>Profil utilisateur</title>
+</head>
+<body>
+    <div id="bloc-page">
+        <div id="header">
+            <div id="logo">
+                Archi - Tech
+            </div>
+        </div>
+
+        <div id="section">
+            <div id="titre">
+                Profil utilisateur
+            </div>
+
+            <hr id="hr-section-titre">
+
+            <div id="bande"></div>
+
+            <div id="profil">
+                <div id="option-retour">
+                    <a href="/projets"><i class="fa fa-arrow-left"></i> Revenir à la liste de vos projets</a>
+                </div>
+
+                <div id="user">
+                    <div id="infos">
+                        <p><strong>Nom</strong> : {{user.nom}}</p>
+                        <p><strong>Prenom(s)</strong> : {{user.prenom}}</p>
+                        <p><strong>Poste</strong> : {{user.poste}}</p>
+                        <p><strong>Email</strong> : {{user.email}}</p>
+                        <p><strong>Téléphone</strong> : {{user.telephone}}</p>
+
+                        <p><a href="/logout"><button>Se déconnecter</button></a></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="footer"><p><i class="fa fa-copyright"></i> Tout droits réservés , Oracle Logic Consulting SARL 2022</p></div>
+        </div>
+    </div>
+</body>
+</html>
